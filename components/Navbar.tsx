@@ -23,7 +23,7 @@ export default function Navbar() {
           href="/"
           className="text-white text-lg font-bold transition-transform transform hover:scale-110"
         >
-          <Image src={Logo} alt="Momentum-E Logo" className="h-10 w-auto" />
+          <Image src={Logo} alt="Momentum-E Logo" className="h-10 w-auto" priority/>
         </Link>
 
         <div className="flex space-x-4">

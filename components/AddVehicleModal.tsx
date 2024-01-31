@@ -1,11 +1,19 @@
-"use client"
+"use client";
 import React, { useState } from "react";
+
+import { useAuthStore } from "@/stores/authStore";
 
 interface AddVehicleModalProps {
   onClose: () => void;
+  onAddVehicle: () => void;
 }
 
-const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
+type AuthStore = {
+  username: string,
+}
+
+const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle }) => {
+  const {username} = useAuthStore() as AuthStore;
   const [deviceId, setDeviceId] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [company, setCompany] = useState("");
@@ -13,12 +21,38 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
   // You can replace this with your actual list of vehicle manufacturing companies
   const manufacturingCompanies = ["Company A", "Company B", "Company C"];
 
-  const handleAddVehicle = () => {
-    // Add your logic to handle the addition of the new vehicle with the entered details
-    // For now, you can log the values to the console
-    console.log("Device ID:", deviceId);
-    console.log("Vehicle Number:", vehicleNumber);
-    console.log("Company:", company);
+  const handleAddVehicle = async () => {
+    const requestBody = {
+      email: username, // Assuming userEmail is the email of the user adding the vehicle
+      vehicleId: deviceId,
+      serialNumber: vehicleNumber,
+    };
+
+    // Make the HTTP POST request to your API endpoint
+    await fetch("http://localhost:8080/user/addVehicle", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+      credentials:"include"
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add vehicle");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Vehicle added successfully:", data);
+        // Close the modal or perform any other necessary actions
+        onClose();
+        onAddVehicle();
+      })
+      .catch((error) => {
+        console.error("Error adding vehicle:", error.message);
+        // Handle error appropriately
+      });
 
     // Close the modal
     onClose();
@@ -27,14 +61,19 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md">
       <div className="bg-white p-4 rounded-lg w-96">
-        <button onClick={onClose} className="float-right text-xl cursor-pointer">
+        <button
+          onClick={onClose}
+          className="float-right text-xl cursor-pointer"
+        >
           &#10006;
         </button>
         <h1 className="text-2xl text-blue-600 font-bold mb-4">Add Vehicle</h1>
-        
+
         {/* Device ID */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Device ID</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Device ID
+          </label>
           <input
             type="text"
             value={deviceId}
@@ -45,7 +84,9 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
 
         {/* Vehicle Number */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Vehicle Number</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Vehicle Number
+          </label>
           <input
             type="text"
             value={vehicleNumber}
@@ -56,13 +97,17 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
 
         {/* Company */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Company</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Company
+          </label>
           <select
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             className="mt-1 p-2 border rounded-md w-full"
           >
-            <option value="" disabled>Select a company</option>
+            <option value="" disabled>
+              Select a company
+            </option>
             {manufacturingCompanies.map((comp) => (
               <option key={comp} value={comp}>
                 {comp}
@@ -71,7 +116,10 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
           </select>
         </div>
 
-        <button onClick={handleAddVehicle} className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-md">
+        <button
+          onClick={handleAddVehicle}
+          className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-md"
+        >
           Add Vehicle
         </button>
       </div>
@@ -80,4 +128,3 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose }) => {
 };
 
 export default AddVehicleModal;
-
