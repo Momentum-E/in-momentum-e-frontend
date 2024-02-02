@@ -16,7 +16,7 @@ export default function Navbar() {
   const { isAuthenticated } = useAuthStore() as AuthStore;
 
   return (
-    <nav className="bg-blue-500 p-4">
+    <nav className="bg-blue-500 p-4 w-full">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo on the left */}
         <Link

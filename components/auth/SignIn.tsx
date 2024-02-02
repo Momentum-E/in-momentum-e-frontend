@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useState, FormEvent } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from "@/stores/authStore";
 
 interface SigninFormData {
   username: string;
@@ -11,7 +11,7 @@ interface SigninFormData {
 }
 
 type AuthStore = {
-  login(username: string):void
+  login(username: string): void;
 };
 
 export default function Signin() {
@@ -29,6 +29,29 @@ export default function Signin() {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const getCurrentUserEmailAndUserId = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/auth/get-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+        credentials: "include",
+      });
+      // console.log("response", response.json);
+      if (response.ok) {
+        console.log("get user details seccessful");
+        console.log("response", response);
+        return response;
+      } else {
+        console.error("get user details failed");
+      }
+    } catch (error: any) {
+      console.error("Error during fetching user:", error.message);
+    }
   };
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
@@ -52,13 +75,16 @@ export default function Signin() {
       if (response.ok) {
         // Sign in successful
         console.log("Sign in successful");
+        const userData = await getCurrentUserEmailAndUserId();
+        console.log("userData", userData?.body)
+        // const userId = userData.userId;
         login(username);
-        router.push('/dashboard');
+        router.push("/dashboard");
       } else {
         // Sign in failed
         console.error("Sign in failed");
       }
-    } catch (error : any ) {
+    } catch (error: any) {
       console.error("Error during sign in:", error.message);
     }
   };
@@ -113,13 +139,9 @@ export default function Signin() {
       </form>
 
       <div className="mt-4 text-blue-600 text-center">
-        <Link href="/register">
-          Register
-        </Link>
+        <Link href="/register">Register</Link>
         <span className="mx-2">|</span>
-        <Link href="/forgot-password">
-          Forgot Password
-        </Link>
+        <Link href="/forgot-password">Forgot Password</Link>
       </div>
     </div>
   );
