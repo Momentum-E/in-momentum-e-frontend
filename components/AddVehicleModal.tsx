@@ -59,7 +59,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md">
+    <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md z-10">
       <div className="bg-white p-4 rounded-lg w-96">
         <button
           onClick={onClose}

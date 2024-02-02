@@ -41,7 +41,7 @@ export function BatteryHealthChart() {
   const series = [
     {
       name: "SOH",
-      data: [100, 100, 99.9, 99.8, 99.8, 99.7, 99.7],
+      data: [100, 100, 99.98, 99.94, 99.91, 99.88, 99.85, 99.7, 99.68, 99.63, 99.6],
     },
   ];
 
@@ -52,7 +52,7 @@ export function BatteryHealthChart() {
         options={option}
         series={series}
         height={300}
-        width={600}
+        width={700}
       />
     </>
   );

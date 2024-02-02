@@ -98,8 +98,8 @@ export function UsageChart() {
         type="bar"
         options={option}
         series={series}
-        height={300}
-        width={600}
+        height={260}
+        width={700}
       />
     </>
   );

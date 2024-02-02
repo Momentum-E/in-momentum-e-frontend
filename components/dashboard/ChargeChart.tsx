@@ -12,8 +12,8 @@ export function ChargeChart() {
     colors: ["#20E647"],
     plotOptions: {
       radialBar: {
-        startAngle: -180, 
-        endAngle: 180,
+        startAngle: -135, 
+        endAngle: 135,
         hollow: {
           margin: 10,
           size: "70%",
@@ -57,7 +57,7 @@ export function ChargeChart() {
     labels: ["Charge"],
   };
 
-  const series = [60];
+  const series = [100];
 
   return (
     <>

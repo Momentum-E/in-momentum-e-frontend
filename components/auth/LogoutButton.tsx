@@ -32,10 +32,10 @@ export default function LogoutButton() {
         // Handle logout failure
         console.error("Logout failed");
       }
-    } catch (error: { error: any }) {
+    } catch (error: any ) {
       console.error("Error during logout:", error.message);
     }
   };
 
-  return <button className="text-white hover:text-blue-800" onClick={handleLogout}>Logout</button>;
+  return <button className="text-inherit hover:text-blue-800" onClick={handleLogout}>Logout</button>;
 }
