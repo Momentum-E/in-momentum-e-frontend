@@ -319,10 +319,12 @@ const Dashboard = () => {
                       <div className=" ">Charging Pattern</div>
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
                         <span className="block">Total Energy Consumed</span>
-                        <span className="w-full flex items-center justify-center text-blue-500 font-bold">100KW</span>
+                        <span className="w-full flex items-center justify-center text-blue-500 font-bold">
+                          100KW
+                        </span>
                       </div>
                     </div>
-                    <div className="flex text-sm">
+                    <div className="flex justify-evenly text-sm">
                       <div className="flex flex-col justify-evenly h-full">
                         <div className="">
                           <div>Average SOC</div>
@@ -334,7 +336,9 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="flex justify-center items-center transition-transform hover:scale-110">
-                        <ChargeChart />
+                        <ChargeChart
+                          chargePercentage={selectedVehicle.SOC_START}
+                        />
                       </div>
                       <div className="flex flex-col justify-evenly h-full">
                         <div>
@@ -397,7 +401,9 @@ const Dashboard = () => {
                       </div>
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
                         <span className="block">State Of Health</span>
-                        <span className="w-full flex items-center justify-center text-blue-500 font-bold">100%</span>
+                        <span className="w-full flex items-center justify-center text-blue-500 font-bold">
+                          100%
+                        </span>
                       </div>
                     </div>
                     <div className="transition-transform tran hover:scale-[102%]">

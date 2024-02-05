@@ -3,7 +3,11 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export function ChargeChart() {
+interface ChargeChartProps {
+  chargePercentage: number;
+}
+
+export function ChargeChart({chargePercentage} : ChargeChartProps) {
   const option: ApexCharts.ApexOptions = {
     chart: {
       height: 280,
@@ -12,8 +16,8 @@ export function ChargeChart() {
     colors: ["#20E647"],
     plotOptions: {
       radialBar: {
-        startAngle: -135, 
-        endAngle: 135,
+        startAngle: 0, 
+        endAngle: 360,
         hollow: {
           margin: 10,
           size: "70%",
@@ -57,7 +61,7 @@ export function ChargeChart() {
     labels: ["Charge"],
   };
 
-  const series = [100];
+  const series = [chargePercentage];
 
   return (
     <>

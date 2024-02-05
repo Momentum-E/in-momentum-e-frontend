@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+// import { useRouter } from "next/navigation";
 
 export const useAuthStore = create(
   persist(
@@ -7,9 +8,36 @@ export const useAuthStore = create(
       isAuthenticated: false,
       username: "",
       userId: "",
-      login: (username: string, userId: string) => set({ isAuthenticated: true, username, userId }),
-      logout: () => set({ isAuthenticated: false }),
-      // Token refresh function
+      login: async (username: string, userId: string) => {
+        try {
+          set({ isAuthenticated: true, username, userId });
+        } catch (error) {
+          console.error("Error during login:", error);
+          throw error;
+        }
+      },
+      logout: async () => {
+        try {
+          const response = await fetch(
+            "http://localhost:8080/auth/global-sign-out",
+            {
+              method: "POST",
+              credentials: "include",
+            }
+          );
+
+          if (response.ok) {
+            set({ isAuthenticated: false, username: "", userId: "" });
+            localStorage.removeItem("authStorage");
+          } else {
+            console.error("Logout failed");
+            throw new Error("Logout failed");
+          }
+        } catch (error) {
+          console.error("Error during logout:", error);
+          throw error;
+        }
+      },
       refreshToken: async (userId: string) => {
         try {
           const response = await fetch(
@@ -19,23 +47,22 @@ export const useAuthStore = create(
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ userId: userId }),
+              body: JSON.stringify({ userId }),
               credentials: "include",
             }
           );
           if (!response.ok) {
-            // logout();
             throw new Error("Failed to refresh token");
           }
         } catch (error) {
           console.error("Error refreshing token:", error);
-          throw error; // Rethrow the error for handling in components
+          throw error;
         }
       },
     }),
     {
-      name: "authStorage", // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+      name: "authStorage",
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

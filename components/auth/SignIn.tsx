@@ -11,12 +11,13 @@ interface SigninFormData {
 }
 
 type AuthStore = {
-  login(username: string): void;
+  login(username: string, userId: string): void;
+  logout(): void;
 };
 
 export default function Signin() {
   const router = useRouter();
-  const { login } = useAuthStore() as AuthStore;
+  const { login, logout } = useAuthStore() as AuthStore;
 
   const [formData, setFormData] = useState<SigninFormData>({
     username: "",
@@ -43,9 +44,11 @@ export default function Signin() {
       });
       // console.log("response", response.json);
       if (response.ok) {
-        console.log("get user details seccessful");
-        console.log("response", response);
-        return response;
+        console.log("get user details successful");
+        const userData = await response.json(); // Extract JSON data from response
+        console.log("userData", userData);
+        const { email, userId } = userData; // Destructure email and userId from userData
+        return { email, userId }; // Return an object containing email and userId
       } else {
         console.error("get user details failed");
       }
@@ -76,9 +79,18 @@ export default function Signin() {
         // Sign in successful
         console.log("Sign in successful");
         const userData = await getCurrentUserEmailAndUserId();
-        console.log("userData", userData?.body)
-        // const userId = userData.userId;
-        login(username);
+
+        // const userId = userData?.userId;
+
+        if (userData) {
+          login(userData.email, userData.userId);
+        } else {
+          logout();
+          localStorage.removeItem("authStorage");
+          // Redirect to the signin page
+          router.push("/signin");
+        }
+
         router.push("/dashboard");
       } else {
         // Sign in failed
