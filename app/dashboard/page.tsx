@@ -70,6 +70,25 @@ const Dashboard = () => {
     }
   }, [isAuthenticated, router]);
 
+  // useEffect(() => {
+  //   // Check for the presence of refresh token in cookies
+  //   const refreshTokenCookie = document.cookie.includes("refreshToken");
+
+  //   if (!refreshTokenCookie) {
+  //     // If no refresh token found in cookies, logout the user and redirect to sign-in page
+  //     logoutUser();
+  //   }
+  // }, []);
+
+  // Other functions...
+
+  // const logoutUser = () => {
+  //   // Clear local storage
+  //   localStorage.clear();
+  //   // Redirect to sign-in page
+  //   router.push("/signin");
+  // };
+
   const fetchUserVehicles = async () => {
     // Assuming your API endpoint to fetch user's vehicles is '/api/user/vehicles'
     await fetch("http://localhost:8080/user/get-vehicles", {
@@ -88,6 +107,10 @@ const Dashboard = () => {
             // Retry the original request with the refreshed token
             return fetchUserVehicles();
           });
+        }
+        if(response.status === 401){
+          localStorage.clear();
+          router.push("/signin");
         }
         if (!response.ok) {
           throw new Error("Failed to fetch user vehicles");

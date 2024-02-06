@@ -50,6 +50,12 @@ export function DashboardNav() {
                 Home
               </Link>
               <Link
+                href="/dashboard"
+                className="block px-4 py-2 text-gray-800 hover:bg-blue-200"
+              >
+                Dashboard
+              </Link>
+              <Link
                 href="/profile"
                 className="block px-4 py-2 text-gray-800 hover:bg-blue-200"
               >

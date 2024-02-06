@@ -7,7 +7,6 @@ export default function DashboardLayout({
 }) {
   return (
     <section className="w-full h-auto">
-      {/* <Navbar /> */}
       {children}
     </section>
   );
