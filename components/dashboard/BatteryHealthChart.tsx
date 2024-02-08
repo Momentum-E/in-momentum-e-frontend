@@ -3,7 +3,12 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export function BatteryHealthChart() {
+interface UsageChartProps {
+  Monthly_SOH_Data: number[];
+}
+
+export function BatteryHealthChart({Monthly_SOH_Data}: UsageChartProps): JSX.Element {
+  console.log(Monthly_SOH_Data);
   const option: ApexCharts.ApexOptions = {
     chart: {
       height: 350,
@@ -41,7 +46,7 @@ export function BatteryHealthChart() {
   const series = [
     {
       name: "SOH",
-      data: [100, 100, 99.98, 99.94, 99.91, 99.88, 99.85, 99.7, 99.68, 99.63, 99.6, 99.6],
+      data: Monthly_SOH_Data,
     },
   ];
 

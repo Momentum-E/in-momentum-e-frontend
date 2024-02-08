@@ -24,8 +24,6 @@ type AuthStore = {
 
 type Vehicle = {
   VEHICLE_ID: string;
-  TRIP_ID: string;
-  TRIP_START_TIME: string;
   ODOMETER_START_READING: number;
   SOC_START: number;
   SOC_END: number;
@@ -40,11 +38,40 @@ type Vehicle = {
     SERIAL_NUMBER: string;
     ID: string;
   };
-  LOCATION: {
-    LATITUDE: number;
-    LONGITUDE: number;
-  };
+  LOCATION: string;
   CHARGING_STATUS: string;
+  Vehicle_Info: {
+    Odometer: string;
+    Vehicle_Model: string;
+    Model_Year: string;
+    VIN: string;
+    Battery_Capacity: string;
+    Charging_Pattern: {
+      Total_Energy_Consumed: string;
+      Average_SOC: string;
+      Connector_Type: string;
+      Total_Charging_Sessions: number;
+      Average_Charging_Rate: string;
+    };
+    Usage: {
+      Avg_Daily_Km_Driven: string;
+      Temperature_High_Low: string;
+      SOC_Range: string;
+      Range_Observed_Max_Min: string;
+      Real_Range_Observed: string;
+      Observed_vs_EPA_WLTP_provided: string;
+    };
+    Battery_Health: {
+      State_Of_Health: string;
+      SoH: string;
+      Estimated_Degradation: string;
+      Battery_Chemistry: string;
+      Monthly_SOH_Data: [];
+    };
+    Connected_On: string;
+    Data_Points_Collected: string;
+    Average_Miles_Driven: [];
+  };
 };
 
 const Dashboard = () => {
@@ -108,7 +135,7 @@ const Dashboard = () => {
             return fetchUserVehicles();
           });
         }
-        if(response.status === 401){
+        if (response.status === 401) {
           localStorage.clear();
           router.push("/signin");
         }
@@ -265,7 +292,7 @@ const Dashboard = () => {
                     </div>
                     <div className="text-sm w-full">
                       <h3 className="font-light text-sm">Location</h3>{" "}
-                      {selectedVehicle.VEHICLE_NUMBER}
+                      {selectedVehicle.LOCATION}
                     </div>
                   </div>
                   <div className="flex justify-start items-center bg-gray-100 rounded-lg shadow-xl w-full mr-6">
@@ -285,7 +312,7 @@ const Dashboard = () => {
                     </div>
                     <div className="text-sm w-full">
                       <h3 className="font-light text-sm">Connected On</h3>{" "}
-                      {selectedVehicle.VEHICLE_NUMBER}
+                      {selectedVehicle.Vehicle_Info.Connected_On}
                     </div>
                   </div>
                   <div className="flex justify-start items-center bg-gray-100 rounded-lg shadow-xl w-full">
@@ -307,7 +334,7 @@ const Dashboard = () => {
                       <h3 className="font-light text-sm">
                         Data Points Collected
                       </h3>{" "}
-                      {selectedVehicle.VEHICLE_NUMBER}
+                      {selectedVehicle.Vehicle_Info.Data_Points_Collected}
                     </div>
                   </div>
                 </div>
@@ -319,22 +346,24 @@ const Dashboard = () => {
                       Vehicle Info
                     </div>
                     <div className="text-gray-800">
-                      <span className="font-light">Odometer :</span> 279372 Km
+                      <span className="font-light">Odometer :</span>{" "}
+                      {selectedVehicle.Vehicle_Info.Odometer}
                     </div>
                     <div>
-                      <span className="font-light">Vehicle Model :</span> SEAT
-                      Mii
+                      <span className="font-light">Vehicle Model :</span>{" "}
+                      {selectedVehicle.Vehicle_Info.Vehicle_Model}
                     </div>
                     <div>
-                      <span className="font-light">Model Year :</span> 2021
+                      <span className="font-light">Model Year :</span>{" "}
+                      {selectedVehicle.Vehicle_Info.Model_Year}
                     </div>
                     <div>
                       <span className="font-light">VIN :</span>{" "}
-                      J1S6JMHAMMX660426
+                      {selectedVehicle.Vehicle_Info.VIN}
                     </div>
                     <div>
-                      <span className="font-light">Battery Capacity :</span> 75
-                      kWh
+                      <span className="font-light">Battery Capacity :</span>{" "}
+                      {selectedVehicle.Vehicle_Info.Battery_Capacity}
                     </div>
                   </div>
                   <div className="flex flex-col justify-center items-center border-black bg-gray-100 rounded-lg shadow-xl w-full  mb-6 mt-5 p-6">
@@ -343,7 +372,10 @@ const Dashboard = () => {
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
                         <span className="block">Total Energy Consumed</span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
-                          100KW
+                          {
+                            selectedVehicle.Vehicle_Info.Charging_Pattern
+                              .Total_Energy_Consumed
+                          }
                         </span>
                       </div>
                     </div>
@@ -351,11 +383,21 @@ const Dashboard = () => {
                       <div className="flex flex-col justify-evenly h-full">
                         <div className="">
                           <div>Average SOC</div>
-                          <div>100%</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Charging_Pattern
+                                .Average_SOC
+                            }
+                          </div>
                         </div>
                         <div>
                           <div>Connector Type</div>
-                          <div>ChaDeMo</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Charging_Pattern
+                                .Connector_Type
+                            }
+                          </div>
                         </div>
                       </div>
                       <div className="flex justify-center items-center transition-transform hover:scale-110">
@@ -366,11 +408,21 @@ const Dashboard = () => {
                       <div className="flex flex-col justify-evenly h-full">
                         <div>
                           <div>Total Charging Sessions</div>
-                          <div>0</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Charging_Pattern
+                                .Total_Charging_Sessions
+                            }
+                          </div>
                         </div>
                         <div>
                           <div>Average Charging Rate</div>
-                          <div>ChaDeMo</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Charging_Pattern
+                                .Average_Charging_Rate
+                            }
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -382,37 +434,68 @@ const Dashboard = () => {
                       Usage
                     </div>
                     <div className="flex justify-center items-center transition-transform tran hover:scale-[102%]">
-                      <UsageChart />
+                      <UsageChart
+                        avgMilesData={
+                          selectedVehicle.Vehicle_Info.Average_Miles_Driven
+                        }
+                      />
                     </div>
                     <div className="flex text-sm">
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
                           <div>Avg Daily Km Driven</div>
-                          <div>18624.8 km</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Usage
+                                .Avg_Daily_Km_Driven
+                            }
+                          </div>
                         </div>
                         <div>
                           <div>Temperature High/Low</div>
-                          <div>12°C / 4.3°C</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Usage
+                                .Temperature_High_Low
+                            }
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
                           <div>SOC Range</div>
-                          <div>20% - 80%</div>
+                          <div>
+                            {selectedVehicle.Vehicle_Info.Usage.SOC_Range}
+                          </div>
                         </div>
                         <div>
                           <div>Range Observed Max/Min ( Km )</div>
-                          <div>120.98 / 120.98</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Usage
+                                .Range_Observed_Max_Min
+                            }
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
                           <div>Real Pange Observed</div>
-                          <div>121 km</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Usage
+                                .Real_Range_Observed
+                            }
+                          </div>
                         </div>
                         <div>
                           <div>Observed v/s EPA/WLTP provided</div>
-                          <div>121 Km 350 Km</div>
+                          <div>
+                            {
+                              selectedVehicle.Vehicle_Info.Usage
+                                .Observed_vs_EPA_WLTP_provided
+                            }
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -425,25 +508,40 @@ const Dashboard = () => {
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
                         <span className="block">State Of Health</span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
-                          100%
+                          {
+                            selectedVehicle.Vehicle_Info.Battery_Health
+                              .State_Of_Health
+                          }
                         </span>
                       </div>
                     </div>
                     <div className="transition-transform tran hover:scale-[102%]">
-                      <BatteryHealthChart />
+                      <BatteryHealthChart Monthly_SOH_Data={selectedVehicle.Vehicle_Info.Battery_Health.Monthly_SOH_Data}/>
                     </div>
                     <div className="flex justify-between w-full text-sm">
                       <div className="flex flex-col justify-center items-start">
                         <div>SoH</div>
-                        <div>100.00 %</div>
+                        <div>
+                          {selectedVehicle.Vehicle_Info.Battery_Health.SoH}
+                        </div>
                       </div>
                       <div>
                         <div>Estimated Degradation</div>
-                        <div>0.00 %</div>
+                        <div>
+                          {
+                            selectedVehicle.Vehicle_Info.Battery_Health
+                              .Estimated_Degradation
+                          }
+                        </div>
                       </div>
                       <div>
                         <div>Battery Chemistry</div>
-                        <div>NMC</div>
+                        <div>
+                          {
+                            selectedVehicle.Vehicle_Info.Battery_Health
+                              .Battery_Chemistry
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>

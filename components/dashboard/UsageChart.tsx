@@ -3,7 +3,12 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export function UsageChart() {
+interface UsageChartProps {
+  avgMilesData: number[];
+}
+
+export function UsageChart({ avgMilesData }: UsageChartProps): JSX.Element {
+  // console.log(avgMilesData);
   const option: ApexCharts.ApexOptions = {
     annotations: {
       points: [
@@ -68,7 +73,7 @@ export function UsageChart() {
       title: {
         text: "Avg distance in km",
       },
-      max: 100
+      max: 100,
     },
     fill: {
       type: "gradient",
@@ -88,7 +93,7 @@ export function UsageChart() {
   const series = [
     {
       name: "Avg distance in km",
-      data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65],
+      data: avgMilesData,
     },
   ];
 
