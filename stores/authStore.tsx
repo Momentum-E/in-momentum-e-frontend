@@ -6,11 +6,12 @@ export const useAuthStore = create(
   persist(
     (set) => ({
       isAuthenticated: false,
+      name: "",
       username: "",
       userId: "",
-      login: async (username: string, userId: string) => {
+      login: async (username: string, userId: string, name: string) => {
         try {
-          set({ isAuthenticated: true, username, userId });
+          set({ isAuthenticated: true, username, userId, name });
         } catch (error) {
           console.error("Error during login:", error);
           throw error;
@@ -27,7 +28,7 @@ export const useAuthStore = create(
           );
 
           if (response.ok) {
-            set({ isAuthenticated: false, username: "", userId: "" });
+            set({ isAuthenticated: false, username: "", userId: "", name: "" });
             localStorage.removeItem("authStorage");
           } else {
             console.error("Logout failed");
@@ -52,6 +53,7 @@ export const useAuthStore = create(
             }
           );
           if (!response.ok) {
+            
             throw new Error("Failed to refresh token");
           }
         } catch (error) {

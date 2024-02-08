@@ -8,11 +8,12 @@ import LogoutButton from "../auth/LogoutButton";
 import { useAuthStore } from "@/stores/authStore";
 
 interface AuthStore {
+  name: string;
   username: string;
 }
 
 export function ProfileNav() {
-  const { username } = useAuthStore() as AuthStore;
+  const { username, name } = useAuthStore() as AuthStore;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -26,13 +27,14 @@ export function ProfileNav() {
           <Image
             src={Logo}
             alt="Momentum-E Logo"
-            className="h-10 w-auto"
+            className="h-11 w-auto shadow-md"
             priority
           />
+          {/* <hr className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-black to-transparent"></hr> */}
         </div>
         <div className="flex items-center justify-center">
           <div className="pr-2 flex justify-center items-center text-gray-200">
-            {username}
+            {name ? name : username}
           </div>
           <div className="relative">
             <button

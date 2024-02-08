@@ -6,6 +6,7 @@ import EmailConfirmationModal from "./EmailConfirmationModal";
 import { useRouter } from "next/navigation";
 
 interface FormData {
+  name: string;
   email: string;
   password: string;
 }
@@ -14,6 +15,7 @@ export default function Register() {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({
+    name: "",
     email: "",
     password: "",
   });
@@ -52,9 +54,9 @@ export default function Register() {
 
   const handleConfirmEmail = async (confirmationCode: string) => {
     console.log("inside handleConfirmEmail");
-    const { email } = formData;
+    const { email, name } = formData;
 
-    console.log(email, confirmationCode);
+    console.log(email, confirmationCode, name);
     try {
       const response = await fetch(
         "http://localhost:8080/auth/confirm-sign-up",
@@ -66,6 +68,7 @@ export default function Register() {
           body: JSON.stringify({
             confirmationCode,
             username: email,
+            name: name,
           }),
         }
       );
@@ -93,6 +96,22 @@ export default function Register() {
       <form className="space-y-4" onSubmit={handleSignUp}>
         <div>
           <label
+            htmlFor="name"
+            className="block text-sm font-medium text-blue-600"
+          >
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            autoComplete="name"
+            className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+        </div>
+        <div>
+          <label
             htmlFor="email"
             className="block text-sm font-medium text-blue-600"
           >
@@ -111,7 +130,9 @@ export default function Register() {
         </div>
 
         <div className="mb-6">
-          <h1 className="text-sm font-medium mb-2 text-blue-600">Password requirements</h1>
+          <h1 className="text-sm font-medium mb-2 text-blue-600">
+            Password requirements
+          </h1>
           <p className="text-sm mb-4 text-blue-950">
             <span className="block">- Contains at least 1 number</span>
             <span className="block">
@@ -123,9 +144,7 @@ export default function Register() {
             <span className="block">
               - Contains at least 1 lowercase letter
             </span>
-            <span className="block">
-              - Minimum length 8 characters
-            </span>
+            <span className="block">- Minimum length 8 characters</span>
           </p>
 
           <label

@@ -11,7 +11,7 @@ interface SigninFormData {
 }
 
 type AuthStore = {
-  login(username: string, userId: string): void;
+  login(username: string, userId: string, name: string): void;
   logout(): void;
 };
 
@@ -47,8 +47,8 @@ export default function Signin() {
         console.log("get user details successful");
         const userData = await response.json(); // Extract JSON data from response
         console.log("userData", userData);
-        const { email, userId } = userData; // Destructure email and userId from userData
-        return { email, userId }; // Return an object containing email and userId
+        const { email, userId, name } = userData; // Destructure email and userId from userData
+        return { email, userId, name }; // Return an object containing email and userId
       } else {
         console.error("get user details failed");
       }
@@ -83,7 +83,7 @@ export default function Signin() {
         // const userId = userData?.userId;
 
         if (userData) {
-          login(userData.email, userData.userId);
+          login(userData.email, userData.userId, userData.name);
         } else {
           logout();
           localStorage.removeItem("authStorage");

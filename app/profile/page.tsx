@@ -1,10 +1,7 @@
 "use client";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
-import Image from "next/image";
-import { FormEvent, useState } from "react";
-import Logo from "@/public/logo.png";
-import { ProfileNav } from "@/components/profile/ProfileNav";
 
+import { FormEvent, useState } from "react";
+import { ProfileNav } from "@/components/profile/ProfileNav";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +14,6 @@ interface AuthStore {
 const ProfilePage = () => {
   const router = useRouter();
   const { username, logout, refreshToken } = useAuthStore() as AuthStore;
-  // const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =useState(false);
   const [previousPassword, setPreviousPassword] = useState("");
   const [proposedPassword, setProposedPassword] = useState("");
   const [changePasswordError, setChangePasswordError] = useState(null);
@@ -123,7 +119,7 @@ const ProfilePage = () => {
               />
             </svg>
             <h2 className="text-xl font-bold text-center mt-4">User Name</h2>
-            <p className="text-gray-600 text-center mt-2">user@example.com</p>
+            <p className="text-gray-600 text-center mt-2">{username}</p>
           </div>
           {/* <hr className="bg-black"></hr> */}
           {/* user statistics */}

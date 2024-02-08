@@ -264,7 +264,7 @@ const Dashboard = () => {
       </div>
       {/* Right section */}
       <div className="w-full">
-        <DashboardNav />
+        <DashboardNav selecedVehicleId={selectedVehicleId} />
         <div className="p-4 bg-gray-200">
           {!selectedVehicle && (
             <h3 className="pt-96 w-full h-screen flex justify-center">
