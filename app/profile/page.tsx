@@ -36,6 +36,33 @@ const ProfilePage = () => {
     }
   }, [isAuthenticated, router]);
 
+  useEffect(() => {
+    // Fetch the image from the server
+    if (imageUrl) {
+      fetch(`http://localhost:8080/uploads/${imageUrl}`) // Replace imageName.jpg with the actual name of the uploaded image
+        .then((response) => {
+          if (response.ok) {
+            return response.blob();
+          }
+          throw new Error("Network response was not ok.");
+        })
+        .then((blob) => {
+          // Create a local URL for the fetched image
+          const imageURL = URL.createObjectURL(blob);
+          setImageUrl(imageURL);
+        })
+        .catch((error) => {
+          console.error("There was a problem fetching the image:", error);
+        });
+
+      // Clean up function
+      return () => {
+        // Revoke the object URL to avoid memory leaks
+        URL.revokeObjectURL(imageUrl);
+      };
+    }
+  }, []);
+
   const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);
   };
@@ -174,7 +201,9 @@ const ProfilePage = () => {
                   accept="image/*"
                   onChange={handleFileChange}
                 />
-                <button type="submit">Upload</button>
+                <button type="submit" className="bg-blue-500 rounded-md p-4">
+                  Upload
+                </button>
               </form>
               <h2 className="text-2xl font-bold">{name || username}</h2>
               <p className="text-gray-600">{username}</p>

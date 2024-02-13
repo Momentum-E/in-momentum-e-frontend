@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useAuthStore } from "@/stores/authStore";
 
@@ -90,19 +92,30 @@ export default function Signin() {
           // Redirect to the signin page
           router.push("/signin");
         }
+        // Show success toast
+        toast.success("Sign in successful! Redirecting to dashboard...");
 
-        router.push("/dashboard");
+        // Delay redirection to allow toast to display
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 3000);
       } else {
         // Sign in failed
         console.error("Sign in failed");
+        const resData = await response.json();
+        // Show failure toast
+        toast.error(resData.error);
       }
     } catch (error: any) {
       console.error("Error during sign in:", error.message);
+      // Show error toast
+      toast.error(`Error during sign in: ${error.message}`);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-16">
+      <ToastContainer />
       <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
         Sign In
       </h2>

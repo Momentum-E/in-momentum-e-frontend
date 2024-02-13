@@ -1,11 +1,13 @@
-"use client"
+"use client";
 import { useState, useEffect, FormEvent } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface EmailConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (confirmationCode: string) => void;
-  email: string
+  email: string;
 }
 
 const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
@@ -18,13 +20,12 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
   const [isResendActive, setIsResendActive] = useState(false);
   const [resendTimer, setResendTimer] = useState(60); // 60 seconds
 
-
   useEffect(() => {
     // Activate resend link after 1 minute
     const timerId = setTimeout(() => {
       setIsResendActive(true);
     }, 60000); // 1 minute
-  
+
     return () => {
       clearTimeout(timerId);
     };
@@ -41,15 +42,18 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
 
   const handleResend = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/resend-confirmation-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: email,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/auth/resend-confirmation-code",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: email,
+          }),
+        }
+      );
 
       if (response.ok) {
         // Resend successful
@@ -64,16 +68,25 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
     }
   };
 
-
   return (
-    <div className={`fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md ${isOpen ? "block" : "hidden"}`}>
+    <div
+      className={`fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md ${
+        isOpen ? "block" : "hidden"
+      }`}
+    >
       <div className="bg-white w-1/4 mx-auto my-8 p-4 border rounded-md">
-        <span className="close text-gray-600 float-right text-2xl cursor-pointer" onClick={onClose}>
+        <span
+          className="close text-gray-600 float-right text-2xl cursor-pointer"
+          onClick={onClose}
+        >
           &times;
         </span>
         <h2 className="text-2xl font-bold mb-4">Email Confirmation</h2>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="confirmationCode" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="confirmationCode"
+            className="block text-sm font-medium text-gray-700"
+          >
             Confirmation Code:
           </label>
           <input
@@ -99,7 +112,9 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
               Resend Code
             </button>
           ) : (
-            <span className="text-gray-500">Resend Code in {resendTimer} seconds</span>
+            <span className="text-gray-500">
+              Resend Code in {resendTimer} seconds
+            </span>
           )}
         </div>
       </div>
@@ -108,4 +123,3 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
 };
 
 export default EmailConfirmationModal;
-

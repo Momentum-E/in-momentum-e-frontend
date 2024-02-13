@@ -5,6 +5,9 @@ import { useState, FormEvent } from "react";
 import EmailConfirmationModal from "./EmailConfirmationModal";
 import { useRouter } from "next/navigation";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 interface FormData {
   name: string;
   email: string;
@@ -45,9 +48,12 @@ export default function Register() {
         console.log(showConfirmation);
       } else {
         // Registration failed
+        const resData = await response.json();
+        toast.error(resData.error);
         console.error("Registration failed");
       }
     } catch (error: any) {
+      toast.error(error.message);
       console.error("Error during registration:", error.message);
     }
   };
@@ -76,19 +82,29 @@ export default function Register() {
       if (response.ok) {
         // Email confirmation successful, you can redirect or show a success message
         console.log("Email confirmation successful");
-        setShowConfirmation(false); // Close the modal after confirmation
-        router.push("/signin");
+        setShowConfirmation(false);
+        // Show success toast
+        toast.success("Signup Successfull! Redirecting to Sign-in page...");
+
+        // Delay redirection to allow toast to display
+        setTimeout(() => {
+          router.push("/signin");
+        }, 3000);
       } else {
         // Email confirmation failed
+        const resData = await response.json();
+        toast.error(resData.error);
         console.error("Email confirmation failed");
       }
     } catch (error: any) {
-      console.error("Error during email confirmation:", error.message);
+      toast.error(error.message);
+      console.error("Error during email confirmation:", );
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-16">
+      <ToastContainer />
       <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
         Register
       </h2>
@@ -108,6 +124,7 @@ export default function Register() {
             autoComplete="name"
             className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
           />
         </div>
         <div>
@@ -126,6 +143,7 @@ export default function Register() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
+            required
           />
         </div>
 
@@ -162,6 +180,7 @@ export default function Register() {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
+            required
           />
         </div>
 

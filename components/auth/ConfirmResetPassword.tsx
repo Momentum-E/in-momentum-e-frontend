@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ConfirmPasswordReset = () => {
   const router = useRouter();
   const searchParmas = useSearchParams();
@@ -24,21 +27,25 @@ const ConfirmPasswordReset = () => {
           username: email,
         }),
       });
+      const resData = await response.json();
 
       if (response.ok) {
         // Password reset confirmed successfully
+        toast.success(resData.message);
         router.push('/signin'); // Redirect to login page or any other page
       } else {
-        const data = await response.json();
-        console.error(data.error || 'Failed to confirm password reset');
+        toast.error(resData.error);
+        console.error(resData.error || 'Failed to confirm password reset');
       }
-    } catch (error) {
-      console.error('An unexpected error occurred', error);
+    } catch (error: any) {
+      toast.error(error.message);
+      console.error('An unexpected error occurred', error.message);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-16">
+      <ToastContainer />
       <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
         Reset Password
       </h2>
@@ -61,6 +68,7 @@ const ConfirmPasswordReset = () => {
             name="confirmationCode"
             className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
             onChange={(e) => setConfirmationCode(e.target.value)}
+            autoComplete='code'
           />
         </div>
 

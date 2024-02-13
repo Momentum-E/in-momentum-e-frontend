@@ -1,37 +1,54 @@
-"use client"
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8080/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username }),
-      });
-
+      const response = await fetch(
+        "http://localhost:8080/auth/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username }),
+        }
+      );
+      // console.log(await response.json());
+      const resData = await response.json();
+      console.log(resData);
       if (response.ok) {
-        router.push(`forgot-password/confirm-reset-password?email=${username}`); // Redirect to a page indicating that an email was sent for password reset
+        toast.info(resData.message);
+        setTimeout(() => {
+          router.push(
+            `forgot-password/confirm-reset-password?email=${username}`
+          ); // Redirect to a page indicating that an email was sent for password reset
+        }, 3000);
       } else {
-        const data = await response.json();
-        console.error(data.error || 'Failed to initiate forgot password request');
+        toast.error(resData.error);
+        console.error(
+          resData.error || "Failed to initiate forgot password request"
+        );
       }
-    } catch (error) {
-      console.error('An unexpected error occurred', error);
+    } catch (error: any) {
+      toast.error(error.message);
+      console.error("An unexpected error occurred", error.message);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-16">
+      <ToastContainer />
       <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
         Forgot Password
       </h2>
@@ -51,6 +68,7 @@ const ForgotPassword = () => {
             autoComplete="username"
             className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
 
