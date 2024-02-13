@@ -72,7 +72,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
         {/* Device ID */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Device ID
+            Vehicle ID
           </label>
           <input
             type="text"
@@ -85,7 +85,8 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
         {/* Vehicle Number */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            Vehicle Number
+            {/* Vehicle Number */}
+            Serial Number
           </label>
           <input
             type="text"

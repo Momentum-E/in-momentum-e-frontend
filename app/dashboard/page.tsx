@@ -76,8 +76,7 @@ type Vehicle = {
 
 const Dashboard = () => {
   const router = useRouter();
-  const { isAuthenticated, username, userId, refreshToken } =
-    useAuthStore() as AuthStore;
+  const { isAuthenticated, username, userId, refreshToken } =useAuthStore() as AuthStore;
   console.log(isAuthenticated, username);
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -90,9 +89,11 @@ const Dashboard = () => {
   useEffect(() => {
     // If the user is not authenticated, redirect to the home page
     if (!isAuthenticated) {
-      router.push("/");
+      console.log("isAuthenticated", isAuthenticated);
+      router.push("/signin");
     } else {
       // Fetch user's vehicles when authenticated
+      router.push("/dashboard");
       fetchUserVehicles();
     }
   }, [isAuthenticated, router]);
@@ -117,42 +118,42 @@ const Dashboard = () => {
   // };
 
   const fetchUserVehicles = async () => {
-    // Assuming your API endpoint to fetch user's vehicles is '/api/user/vehicles'
-    await fetch("http://localhost:8080/user/get-vehicles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Assuming you need to send the email in the request body
-      body: JSON.stringify({ email: username }), // Replace userEmail with the actual email
-      credentials: "include",
-    })
-      .then(async (response) => {
-        if (response.status === 403) {
-          // Trigger token refresh flow
-          return refreshToken(userId).then(() => {
+    try {
+      await fetch("http://localhost:8080/user/get-vehicles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: username }), // Replace userEmail with the actual email
+        credentials: "include",
+      })
+        .then(async (response) => {
+          if (response.status === 403) {
+            // Trigger token refresh flow
+            await refreshToken(userId);
             // Retry the original request with the refreshed token
             return fetchUserVehicles();
-          });
-        }
-        if (response.status === 401) {
-          localStorage.clear();
-          router.push("/signin");
-        }
-        if (!response.ok) {
-          throw new Error("Failed to fetch user vehicles");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("setVehicles", data.vehicles);
-        // Set the fetched vehicles in state
-        setVehicles(data.vehicles);
-      })
-      .catch((error) => {
-        console.error("Error fetching user vehicles:", error.message);
-        // Handle error appropriately
-      });
+          } else if (response.status === 401) {
+            localStorage.clear();
+            router.push("/signin");
+          } else if (!response.ok) {
+            throw new Error("Failed to fetch user vehicles");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("setVehicles", data.vehicles);
+          // Set the fetched vehicles in state
+          setVehicles(data.vehicles);
+        })
+        .catch((error) => {
+          console.error("Error fetching user vehicles:", error.message);
+          // Handle error appropriately
+        });
+    } catch (error) {
+      console.error("Error fetching user vehicles:", error.message);
+      // Handle error appropriately
+    }
   };
 
   const handleDelete = () => {
@@ -516,7 +517,12 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="transition-transform tran hover:scale-[102%]">
-                      <BatteryHealthChart Monthly_SOH_Data={selectedVehicle.Vehicle_Info.Battery_Health.Monthly_SOH_Data}/>
+                      <BatteryHealthChart
+                        Monthly_SOH_Data={
+                          selectedVehicle.Vehicle_Info.Battery_Health
+                            .Monthly_SOH_Data
+                        }
+                      />
                     </div>
                     <div className="flex justify-between w-full text-sm">
                       <div className="flex flex-col justify-center items-start">

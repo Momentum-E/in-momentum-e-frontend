@@ -21,8 +21,8 @@ export function ProfileNav() {
   };
 
   return (
-    <nav className="px-8 pt-4 bg-gray-800 h-60">
-      <div className="flex w-full mx-auto items-center justify-between">
+    <nav className="px-4 pt-4 bg-gray-800 h-60 z-10">
+      <div className="flex w-full items-center justify-between">
         <div>
           <Image
             src={Logo}

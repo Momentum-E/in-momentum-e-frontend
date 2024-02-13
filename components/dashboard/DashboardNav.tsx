@@ -28,9 +28,9 @@ export function DashboardNav({
 
   return (
     <nav className="bg-gray-200 px-4 pt-4 w-full">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="flex justify-between items-center">
         <div>
-          <h1>Dashboard / Vehicle: {selecedVehicleId}</h1>
+          <p className="text-base">Dashboard / Vehicle: {selecedVehicleId}</p>
         </div>
         <div className="flex justify-center items-center">
           <div className="pr-2 flex justify-center items-center">

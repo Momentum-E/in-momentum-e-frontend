@@ -41,24 +41,24 @@ export const useAuthStore = create(
       },
       refreshToken: async (userId: string) => {
         try {
-          const response = await fetch(
-            "http://localhost:8080/auth/refresh-auth",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ userId }),
-              credentials: "include",
+            const response = await fetch(
+                "http://localhost:8080/auth/refresh-auth",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ userId }),
+                    credentials: "include",
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Failed to refresh token");
             }
-          );
-          if (!response.ok) {
-            
-            throw new Error("Failed to refresh token");
-          }
+            return true; // Indicate successful token refresh
         } catch (error) {
-          console.error("Error refreshing token:", error);
-          throw error;
+            console.error("Error refreshing token:", error);
+            throw error;
         }
       },
     }),
