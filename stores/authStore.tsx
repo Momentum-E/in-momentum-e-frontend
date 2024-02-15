@@ -9,6 +9,7 @@ export const useAuthStore = create(
       name: "",
       username: "",
       userId: "",
+      userImageUrl: "",
       login: async (username: string, userId: string, name: string) => {
         try {
           set({ isAuthenticated: true, username, userId, name });
@@ -61,6 +62,14 @@ export const useAuthStore = create(
             throw error;
         }
       },
+      setUserImageUrl: async(url: string) => {
+        try {
+          set({ userImageUrl: url });
+        } catch (error) {
+          console.error("Error during image url setting:", error);
+          throw error;
+        }
+      }
     }),
     {
       name: "authStorage",

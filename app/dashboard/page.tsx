@@ -9,7 +9,6 @@ import AddVehicleModal from "@/components/AddVehicleModal";
 import Image from "next/image";
 import logo from "@/public/logo.png";
 
-import { Chart } from "@/components/dashboard/Chart";
 import { ChargeChart } from "@/components/dashboard/ChargeChart";
 import { UsageChart } from "@/components/dashboard/UsageChart";
 import { BatteryHealthChart } from "@/components/dashboard/BatteryHealthChart";
@@ -19,7 +18,9 @@ type AuthStore = {
   isAuthenticated: boolean;
   username: string;
   userId: string;
+  userImageUrl: string;
   refreshToken(username: string): Promise<void>;
+  setUserImageUrl(url: string): void;
 };
 
 type Vehicle = {
@@ -76,10 +77,11 @@ type Vehicle = {
 
 const Dashboard = () => {
   const router = useRouter();
-  const { isAuthenticated, username, userId, refreshToken } =useAuthStore() as AuthStore;
+  const { isAuthenticated, username, userId, userImageUrl, refreshToken, setUserImageUrl } = useAuthStore() as AuthStore;
   console.log(isAuthenticated, username);
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isAddVehicleModalOpen, setAddVehicleModalOpen] = useState(false);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(
@@ -95,27 +97,9 @@ const Dashboard = () => {
       // Fetch user's vehicles when authenticated
       router.push("/dashboard");
       fetchUserVehicles();
+      fetchProfileImage();
     }
   }, [isAuthenticated, router]);
-
-  // useEffect(() => {
-  //   // Check for the presence of refresh token in cookies
-  //   const refreshTokenCookie = document.cookie.includes("refreshToken");
-
-  //   if (!refreshTokenCookie) {
-  //     // If no refresh token found in cookies, logout the user and redirect to sign-in page
-  //     logoutUser();
-  //   }
-  // }, []);
-
-  // Other functions...
-
-  // const logoutUser = () => {
-  //   // Clear local storage
-  //   localStorage.clear();
-  //   // Redirect to sign-in page
-  //   router.push("/signin");
-  // };
 
   const fetchUserVehicles = async () => {
     try {
@@ -124,7 +108,7 @@ const Dashboard = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: username }), // Replace userEmail with the actual email
+        body: JSON.stringify({ email: username }),
         credentials: "include",
       })
         .then(async (response) => {
@@ -156,14 +140,44 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = () => {
-    if (!selectedVehicle) return; // No vehicle selected, do nothing
+  const fetchProfileImage = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/user-data/profile-picture`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: username }),
+        }
+      );
+
+      if (response.ok) {
+        const blob = await response.blob(); // Get the image data as a blob
+        console.log(blob);
+        const imageUrl = URL.createObjectURL(blob); // Create a local URL for the fetched image
+        console.log(imageUrl);
+        setImageUrl(imageUrl);
+        setUserImageUrl(imageUrl);
+      } else {
+        setUserImageUrl("");
+        throw new Error("Network response was not ok.");
+      }
+    } catch (error) {
+      console.error("There was a problem fetching profile picture:", error);
+    }
+  };
+
+  const handleDelete = (vehicle: Vehicle) => {
+    // if (!selectedVehicle) return; // No vehicle selected, do nothing
     console.log("delete called");
 
     const {
       VEHICLE_ID,
       IOT_DEVICE_DETAILS: { SERIAL_NUMBER },
-    } = selectedVehicle;
+    } = vehicle;
 
     // Send a request to delete the vehicle
     fetch("http://localhost:8080/user/deleteVehicle", {
@@ -255,7 +269,7 @@ const Dashboard = () => {
                   alt="delete icon"
                   height={20}
                   width={20}
-                  onClick={handleDelete}
+                  onClick={() => handleDelete(vehicle)}
                   priority
                 />
               </div>

@@ -37,7 +37,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
       body: JSON.stringify(requestBody),
       credentials:"include"
     })
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error("Failed to add vehicle");
         }
@@ -49,7 +49,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
         onClose();
         onAddVehicle();
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error adding vehicle:", error.message);
         // Handle error appropriately
       });

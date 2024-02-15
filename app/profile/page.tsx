@@ -7,24 +7,37 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import DefaultUserImage from "@/public/abcd.jpg";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 interface AuthStore {
   isAuthenticated: boolean;
   username: string;
   name: string;
+  userImageUrl: string;
   logout(): string;
   refreshToken(): void;
+  setUserImageUrl(url: string): void;
 }
 
 const ProfilePage = () => {
   const router = useRouter();
-  const { isAuthenticated, username, name, logout, refreshToken } =
-    useAuthStore() as AuthStore;
+  const {
+    isAuthenticated,
+    name,
+    userImageUrl,
+    logout,
+    refreshToken,
+    setUserImageUrl,
+  } = useAuthStore() as AuthStore;
+  const username = useAuthStore((state: any) => state.username);
+  console.log(username);
 
   const [file, setFile] = useState<string | Blob>("");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // const [imageUrl, setImageUrl] = useState<string>("");
   const [previousPassword, setPreviousPassword] = useState("");
   const [proposedPassword, setProposedPassword] = useState("");
-  const [changePasswordError, setChangePasswordError] = useState(null);
+  // const [changePasswordError, setChangePasswordError] = useState(null);
   const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] =
     useState(false);
 
@@ -36,32 +49,35 @@ const ProfilePage = () => {
     }
   }, [isAuthenticated, router]);
 
-  useEffect(() => {
-    // Fetch the image from the server
-    if (imageUrl) {
-      fetch(`http://localhost:8080/uploads/${imageUrl}`) // Replace imageName.jpg with the actual name of the uploaded image
-        .then((response) => {
-          if (response.ok) {
-            return response.blob();
-          }
-          throw new Error("Network response was not ok.");
-        })
-        .then((blob) => {
-          // Create a local URL for the fetched image
-          const imageURL = URL.createObjectURL(blob);
-          setImageUrl(imageURL);
-        })
-        .catch((error) => {
-          console.error("There was a problem fetching the image:", error);
-        });
+  const fetchProfileImage = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/user-data/profile-picture`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: username }),
+        }
+      );
 
-      // Clean up function
-      return () => {
-        // Revoke the object URL to avoid memory leaks
-        URL.revokeObjectURL(imageUrl);
-      };
+      if (response.ok) {
+        const blob = await response.blob(); // Get the image data as a blob
+        console.log(blob);
+        const imageUrl = URL.createObjectURL(blob); // Create a local URL for the fetched image
+        console.log(imageUrl);
+        setUserImageUrl(imageUrl);
+      } else {
+        toast.error("error fetching user Image");
+        throw new Error("Network response was not ok.");
+      }
+    } catch (error: any) {
+      console.error("There was a problem fetching profile picture:", error);
+      toast.error(error.message);
     }
-  }, []);
+  };
 
   const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);
@@ -69,7 +85,7 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    if (!file) return null;
     const formData = new FormData();
     formData.append("image", file);
     formData.append("email", username);
@@ -86,15 +102,16 @@ const ProfilePage = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Image uploaded:", data);
-        setImageUrl(data.imageUrl);
-        // handle success, e.g., show a success message or redirect
+        toast.success("Image Upload Successfull!");
+        await fetchProfileImage();
+        setFile("");
       } else {
         console.error("Error uploading image:", response.statusText);
-        // handle error
+        toast.error(response.statusText);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading image:", error);
-      // handle error
+      toast.error(error.message);
     }
   };
 
@@ -125,18 +142,20 @@ const ProfilePage = () => {
         const data = await response.json();
         // console.log(data);
         // If the request is successful, display a success message
-        alert(data.message);
+        toast.success(data.message);
       } else if (response.status == 403) {
         refreshToken();
         handleChangePasswordSubmit(e);
       } else {
         // If an error occurs, throw an error with the response status and message
         const errorData = await response.json();
+        toast.error(errorData.message);
         throw new Error(`${response.status}: ${errorData.error}`);
       }
     } catch (error: any) {
       // If an error occurs, set the error state with the error message
-      setChangePasswordError(error.message);
+      toast.error(error.message);
+      // setChangePasswordError(error.message);
     }
   };
 
@@ -179,29 +198,48 @@ const ProfilePage = () => {
     <>
       {isAuthenticated && (
         <div className="relative w-full h-full">
+          <ToastContainer />
           <ProfileNav />
+
           <div className="absolute top-40 left-60 right-60 p-8 bg-gray-200 rounded-lg shadow-2xl shadow-gray-500">
             {/* name and image */}
             <div className="flex flex-col justify-center items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-40 h-40"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-                  clipRule="evenodd"
+              {userImageUrl ? (
+                <Image
+                  className="cursor-pointer rounded-full"
+                  src={userImageUrl}
+                  alt="user Image"
+                  width={200}
+                  height={200}
+                  priority
                 />
-              </svg>
-              <form onSubmit={handleSubmit}>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-40 h-40 cursor-pointer0"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+
+              <form onSubmit={handleSubmit} className="flex my-2">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                />
-                <button type="submit" className="bg-blue-500 rounded-md p-4">
+                  className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm focus:outline-none"
+                ></input>
+                <button
+                  onClick={handleSubmit}
+                  type="submit"
+                  className="bg-blue-500 rounded-md p-2 mt-1 ml-2 w-40"
+                >
                   Upload
                 </button>
               </form>
@@ -264,9 +302,9 @@ const ProfilePage = () => {
                 >
                   Change Password
                 </button>
-                {changePasswordError && (
+                {/* {changePasswordError && (
                   <p className="text-red-500">{changePasswordError}</p>
-                )}
+                )} */}
               </form>
             </div>
             {/* delete account */}
