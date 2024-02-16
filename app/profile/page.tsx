@@ -5,6 +5,7 @@ import { ProfileNav } from "@/components/profile/ProfileNav";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getCookie, setCookie } from "typescript-cookie";
 import DefaultUserImage from "@/public/abcd.jpg";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -214,11 +215,12 @@ const ProfilePage = () => {
       } else {
         // If an error occurs, throw an error with the response status and message
         const errorData = await response.json();
+        toast.error(errorData.message || errorData.error);
         throw new Error(`${response.status}: ${errorData.error}`);
       }
     } catch (error: any) {
       // If an error occurs, display the error message
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 

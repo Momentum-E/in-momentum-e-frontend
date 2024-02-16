@@ -3,6 +3,9 @@ import React, { useState } from "react";
 
 import { useAuthStore } from "@/stores/authStore";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 interface AddVehicleModalProps {
   onClose: () => void;
   onAddVehicle: () => void;
@@ -39,6 +42,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
     })
       .then(async (response) => {
         if (!response.ok) {
+          
           throw new Error("Failed to add vehicle");
         }
         return response.json();

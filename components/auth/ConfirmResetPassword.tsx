@@ -32,7 +32,10 @@ const ConfirmPasswordReset = () => {
       if (response.ok) {
         // Password reset confirmed successfully
         toast.success(resData.message);
-        router.push('/signin'); // Redirect to login page or any other page
+        setTimeout(() => {
+          router.push('/signin');
+        }, 2300);
+         // Redirect to login page or any other page
       } else {
         toast.error(resData.error);
         console.error(resData.error || 'Failed to confirm password reset');

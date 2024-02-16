@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import deleteIcon from "@/public/delete.png";
 
 import AddVehicleModal from "@/components/AddVehicleModal";
@@ -13,6 +16,7 @@ import { ChargeChart } from "@/components/dashboard/ChargeChart";
 import { UsageChart } from "@/components/dashboard/UsageChart";
 import { BatteryHealthChart } from "@/components/dashboard/BatteryHealthChart";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
+import { removeCookie } from "typescript-cookie";
 
 type AuthStore = {
   isAuthenticated: boolean;
@@ -118,7 +122,10 @@ const Dashboard = () => {
             // Retry the original request with the refreshed token
             return fetchUserVehicles();
           } else if (response.status === 401) {
-            localStorage.clear();
+            localStorage.removeItem("authStorage");
+            removeCookie("refreshToken");
+            removeCookie("idToken");
+            removeCookie("accessToken");
             router.push("/signin");
           } else if (!response.ok) {
             throw new Error("Failed to fetch user vehicles");
@@ -170,7 +177,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = (vehicle: Vehicle) => {
+  const handleDelete = async (vehicle: Vehicle) => {
     // if (!selectedVehicle) return; // No vehicle selected, do nothing
     console.log("delete called");
 
@@ -180,7 +187,7 @@ const Dashboard = () => {
     } = vehicle;
 
     // Send a request to delete the vehicle
-    fetch("http://localhost:8080/user/deleteVehicle", {
+    await fetch("http://localhost:8080/user/deleteVehicle", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -194,12 +201,15 @@ const Dashboard = () => {
     })
       .then((response) => {
         if (!response.ok) {
+          toast.error(response.statusText);
           throw new Error("Failed to delete vehicle");
         }
+        // toast.success("Vehicle Deleted");
         return response.json();
       })
       .then((data) => {
         console.log("Vehicle deleted successfully:", data.message);
+        toast.success(data.message);
         // Optionally, we can update the vehicles state to reflect the changes
         // For example, refetch user's vehicles
         fetchUserVehicles();
@@ -212,6 +222,7 @@ const Dashboard = () => {
 
   const handleAddVehicle = () => {
     // Function to update the list of vehicles after adding a vehicle
+    toast.success("vehicle Added");
     fetchUserVehicles();
   };
 
@@ -227,6 +238,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex w-full h-full">
+      <ToastContainer />
       {/* Left Section */}
       <div className="bg-gray-800 w-1/6 h-auto text-white p-4">
         <div className="flex items-center justify-center mb-2">

@@ -59,6 +59,7 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
         // Resend successful
         setResendTimer(60);
         setIsResendActive(false);
+        toast.success("Code resent");
       } else {
         // Resend failed
         console.error("Failed to resend confirmation code");
