@@ -47,7 +47,7 @@ const ProfilePage = () => {
     } else {
       router.push("/profile");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, userImageUrl]);
 
   const fetchProfileImage = async () => {
     try {
@@ -75,6 +75,34 @@ const ProfilePage = () => {
       }
     } catch (error: any) {
       console.error("There was a problem fetching profile picture:", error);
+      toast.error(error.message);
+    }
+  };
+
+  const deleteProfileImage = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/user-data/remove-profile-picture",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: username }), // Include the user's email in the request body
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        toast.success("Profile picture deleted successfully");
+        setUserImageUrl("");
+        // await fetchProfileImage(); // Refresh the profile picture after deletion
+      } else {
+        toast.error("Error deleting profile picture");
+        throw new Error("Network response was not ok.");
+      }
+    } catch (error: any) {
+      console.error("There was a problem deleting the profile picture:", error);
       toast.error(error.message);
     }
   };
@@ -241,6 +269,12 @@ const ProfilePage = () => {
                   className="bg-blue-500 rounded-md p-2 mt-1 ml-2 w-40"
                 >
                   Upload
+                </button>
+                <button
+                  onClick={deleteProfileImage}
+                  className="bg-red-500 rounded-md p-2 mt-1 ml-2 w-40"
+                >
+                  Delete
                 </button>
               </form>
               <h2 className="text-2xl font-bold">{name || username}</h2>
