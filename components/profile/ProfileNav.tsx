@@ -28,7 +28,7 @@ export function ProfileNav() {
           <Image
             src={Logo}
             alt="Momentum-E Logo"
-            className="h-11 w-auto shadow-md"
+            className="h-11 w-auto shadow-md hover"
             priority
           />
           {/* <hr className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-black to-transparent"></hr> */}
@@ -49,7 +49,7 @@ export function ProfileNav() {
                   height={40}
                   width={40}
                   priority
-                  className="rounded-full"
+                  className="rounded-full transition-transform transform hover:scale-110"
                 />
               ) : (
                 <svg

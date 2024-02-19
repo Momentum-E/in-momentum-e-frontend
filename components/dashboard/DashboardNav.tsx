@@ -53,7 +53,7 @@ export function DashboardNav({
                   width={40}
                   height={40}
                   priority
-                  className="rounded-full"
+                  className="rounded-full transition-transform transform hover:scale-110"
                 />
               ) : (
                 <svg

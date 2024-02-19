@@ -13,11 +13,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 interface AuthStore {
   isAuthenticated: boolean;
+  userId: string;
   username: string;
   name: string;
   userImageUrl: string;
   logout(): string;
-  refreshToken(): void;
+  refreshToken(userId: string): void;
   setUserImageUrl(url: string): void;
 }
 
@@ -25,6 +26,7 @@ const ProfilePage = () => {
   const router = useRouter();
   const {
     isAuthenticated,
+    userId,
     name,
     userImageUrl,
     logout,
@@ -70,6 +72,9 @@ const ProfilePage = () => {
         const imageUrl = URL.createObjectURL(blob); // Create a local URL for the fetched image
         console.log(imageUrl);
         setUserImageUrl(imageUrl);
+      } else if (response.status == 403) {
+        refreshToken(userId);
+        fetchProfileImage();
       } else {
         toast.error("error fetching user Image");
         throw new Error("Network response was not ok.");
@@ -98,6 +103,9 @@ const ProfilePage = () => {
         toast.success("Profile picture deleted successfully");
         setUserImageUrl("");
         // await fetchProfileImage(); // Refresh the profile picture after deletion
+      } else if (response.status == 403) {
+        refreshToken(userId);
+        deleteProfileImage();
       } else {
         toast.error("Error deleting profile picture");
         throw new Error("Network response was not ok.");
@@ -134,6 +142,9 @@ const ProfilePage = () => {
         toast.success("Image Upload Successfull!");
         await fetchProfileImage();
         setFile("");
+      } else if (response.status == 403) {
+        await refreshToken(userId);
+        handleSubmit(e);
       } else {
         console.error("Error uploading image:", response.statusText);
         toast.error(response.statusText);
@@ -173,7 +184,7 @@ const ProfilePage = () => {
         // If the request is successful, display a success message
         toast.success(data.message);
       } else if (response.status == 403) {
-        refreshToken();
+        refreshToken(userId);
         handleChangePasswordSubmit(e);
       } else {
         // If an error occurs, throw an error with the response status and message

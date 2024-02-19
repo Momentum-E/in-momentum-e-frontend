@@ -12,11 +12,16 @@ interface AddVehicleModalProps {
 }
 
 type AuthStore = {
-  username: string,
-}
+  username: string;
+  userId: string;
+  refreshToken(userId: string): void;
+};
 
-const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle }) => {
-  const {username} = useAuthStore() as AuthStore;
+const AddVehicleModal: React.FC<AddVehicleModalProps> = ({
+  onClose,
+  onAddVehicle,
+}) => {
+  const { username, userId, refreshToken } = useAuthStore() as AuthStore;
   const [deviceId, setDeviceId] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [company, setCompany] = useState("");
@@ -38,11 +43,13 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ onClose, onAddVehicle
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
-      credentials:"include"
+      credentials: "include",
     })
       .then(async (response) => {
-        if (!response.ok) {
-          
+        if (response.status == 403) {
+          await refreshToken(userId);
+          handleAddVehicle();
+        } else if (!response.ok) {
           throw new Error("Failed to add vehicle");
         }
         return response.json();

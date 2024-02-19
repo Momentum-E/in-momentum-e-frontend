@@ -81,7 +81,14 @@ type Vehicle = {
 
 const Dashboard = () => {
   const router = useRouter();
-  const { isAuthenticated, username, userId, userImageUrl, refreshToken, setUserImageUrl } = useAuthStore() as AuthStore;
+  const {
+    isAuthenticated,
+    username,
+    userId,
+    userImageUrl,
+    refreshToken,
+    setUserImageUrl,
+  } = useAuthStore() as AuthStore;
   console.log(isAuthenticated, username);
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -147,7 +154,7 @@ const Dashboard = () => {
     }
   };
 
-  const fetchProfileImage = async () => {
+  const fetchProfileImage: any = async () => {
     try {
       const response = await fetch(
         `http://localhost:8080/user-data/profile-picture`,
@@ -168,6 +175,9 @@ const Dashboard = () => {
         console.log(imageUrl);
         setImageUrl(imageUrl);
         setUserImageUrl(imageUrl);
+      } else if (response.status == 403) {
+        await refreshToken(userId);
+        return fetchProfileImage();
       } else {
         setUserImageUrl("");
         throw new Error("Network response was not ok.");
@@ -199,10 +209,13 @@ const Dashboard = () => {
       }),
       credentials: "include",
     })
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
           toast.error(response.statusText);
           throw new Error("Failed to delete vehicle");
+        } else if (response.status == 403) {
+          await refreshToken(userId);
+          return handleDelete(vehicle);
         }
         // toast.success("Vehicle Deleted");
         return response.json();
