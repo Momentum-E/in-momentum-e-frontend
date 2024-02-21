@@ -42,34 +42,34 @@ export const useAuthStore = create(
       },
       refreshToken: async (userId: string) => {
         try {
-            const response = await fetch(
-                "http://localhost:8080/auth/refresh-auth",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ userId }),
-                    credentials: "include",
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Failed to refresh token");
+          const response = await fetch(
+            "http://localhost:8080/auth/refresh-auth",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userId }),
+              credentials: "include",
             }
-            return true; // Indicate successful token refresh
+          );
+          if (!response.ok) {
+            throw new Error("Failed to refresh token");
+          }
+          return true; // Indicate successful token refresh
         } catch (error) {
-            console.error("Error refreshing token:", error);
-            throw error;
+          console.error("Error refreshing token:", error);
+          throw error;
         }
       },
-      setUserImageUrl: async(url: string) => {
+      setUserImageUrl: async (url: string) => {
         try {
           set({ userImageUrl: url });
         } catch (error) {
           console.error("Error during image url setting:", error);
           throw error;
         }
-      }
+      },
     }),
     {
       name: "authStorage",

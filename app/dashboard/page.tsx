@@ -113,8 +113,9 @@ const Dashboard = () => {
   }, [isAuthenticated, router]);
 
   const fetchUserVehicles = async () => {
+    console.log("fetchUserVehicles called");
     try {
-      await fetch("http://localhost:8080/user/get-vehicles", {
+      const response = await fetch("http://localhost:8080/user/get-vehicles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,12 +124,14 @@ const Dashboard = () => {
         credentials: "include",
       })
         .then(async (response) => {
+          console.log(response);
           if (response.status === 403) {
             // Trigger token refresh flow
             await refreshToken(userId);
             // Retry the original request with the refreshed token
-            return fetchUserVehicles();
+            await fetchUserVehicles();
           } else if (response.status === 401) {
+            console.log(response.status);
             localStorage.removeItem("authStorage");
             removeCookie("refreshToken");
             removeCookie("idToken");
@@ -149,12 +152,12 @@ const Dashboard = () => {
           // Handle error appropriately
         });
     } catch (error) {
-      console.error("Error fetching user vehicles:", error.message);
+      console.error("Error fetching user vehicles:", error);
       // Handle error appropriately
     }
   };
 
-  const fetchProfileImage: any = async () => {
+  const fetchProfileImage = async () => {
     try {
       const response = await fetch(
         `http://localhost:8080/user-data/profile-picture`,
@@ -177,7 +180,7 @@ const Dashboard = () => {
         setUserImageUrl(imageUrl);
       } else if (response.status == 403) {
         await refreshToken(userId);
-        return fetchProfileImage();
+        await fetchProfileImage();
       } else {
         setUserImageUrl("");
         throw new Error("Network response was not ok.");

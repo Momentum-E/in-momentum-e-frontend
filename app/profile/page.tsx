@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState, useEffect, useRef } from "react";
 import { ProfileNav } from "@/components/profile/ProfileNav";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
@@ -33,11 +33,11 @@ const ProfilePage = () => {
     refreshToken,
     setUserImageUrl,
   } = useAuthStore() as AuthStore;
+
   const username = useAuthStore((state: any) => state.username);
-  console.log(username);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [file, setFile] = useState<string | Blob>("");
-  // const [imageUrl, setImageUrl] = useState<string>("");
   const [previousPassword, setPreviousPassword] = useState("");
   const [proposedPassword, setProposedPassword] = useState("");
   // const [changePasswordError, setChangePasswordError] = useState(null);
@@ -116,12 +116,11 @@ const ProfilePage = () => {
     }
   };
 
-  const handleFileChange = (e: any) => {
-    setFile(e.target.files[0]);
-  };
+  const handleSubmit = async (file: string | Blob) => {
+    // e.preventDefault();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+    console.log("handleSubmit()");
+    console.log("file", file);
     if (!file) return null;
     const formData = new FormData();
     formData.append("image", file);
@@ -143,8 +142,8 @@ const ProfilePage = () => {
         await fetchProfileImage();
         setFile("");
       } else if (response.status == 403) {
-        await refreshToken(userId);
-        handleSubmit(e);
+        refreshToken(userId);
+        handleSubmit(file);
       } else {
         console.error("Error uploading image:", response.statusText);
         toast.error(response.statusText);
@@ -152,6 +151,29 @@ const ProfilePage = () => {
     } catch (error: any) {
       console.error("Error uploading image:", error);
       toast.error(error.message);
+    }
+  };
+
+  const handleSvgClick = () => {
+    console.log("handleSvgClick")
+    if (fileInputRef.current) {
+      console.log(fileInputRef.current);
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleFileChange()");
+    const file = e.target.files && e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      // Proceed only if the selected file is an image
+      setFile(file);
+      // Do something with the selected image file
+      // console.log(file);
+      handleSubmit(file);
+    } else {
+      // Display an error message or take appropriate action
+      console.error("Please select a valid image file.");
     }
   };
 
@@ -220,8 +242,8 @@ const ProfilePage = () => {
         router.push("/signin");
         logout();
       }
-      if (response.status == 403) {
-        refreshToken();
+      if (response.status === 403) {
+        await refreshToken(userId);
         handleDeleteAccountSubmit(e);
       } else {
         // If an error occurs, throw an error with the response status and message
@@ -239,59 +261,105 @@ const ProfilePage = () => {
     <>
       {isAuthenticated && (
         <div className="relative w-full h-full">
-          <ToastContainer />
+          <ToastContainer position="bottom-right" autoClose={3000}/>
           <ProfileNav />
 
           <div className="absolute top-40 left-60 right-60 p-8 bg-gray-200 rounded-lg shadow-2xl shadow-gray-500">
             {/* name and image */}
             <div className="flex flex-col justify-center items-center">
               {userImageUrl ? (
-                <Image
-                  className="cursor-pointer rounded-full"
-                  src={userImageUrl}
-                  alt="user Image"
-                  width={200}
-                  height={200}
-                  priority
-                />
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-40 h-40 cursor-pointer0"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-                    clipRule="evenodd"
+                <div className="relative">
+                  <Image
+                    className="cursor-pointer rounded-full relative"
+                    src={userImageUrl}
+                    alt="user Image"
+                    width={200}
+                    height={200}
+                    priority
                   />
-                </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.25"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-x absolute bottom-[80px] left-[80px] opacity-0 hover:opacity-100 hover:bg-opacity-70 cursor-pointer"
+                    onClick={deleteProfileImage}
+                  >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-camera absolute bottom-2 left-3/4 p-2 bg-white rounded-lg transition-transform transform hover:scale-110"
+                    onClick={handleSvgClick}
+                  >
+                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                    <circle cx="12" cy="13" r="3" />
+                  </svg>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+                </div>
+              ) : (
+                <div className="relative">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 22 22"
+                    fill="currentColor"
+                    className="w-52 h-52 cursor-pointer relative"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-camera absolute bottom-2 left-3/4 p-2 bg-white rounded-lg transition-transform transform hover:scale-110"
+                    onClick={handleSvgClick}
+                  >
+                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                    <circle cx="12" cy="13" r="3" />
+                  </svg>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </div>
               )}
-
-              <form onSubmit={handleSubmit} className="flex my-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 shadow-sm focus:outline-none"
-                ></input>
-                <button
-                  onClick={handleSubmit}
-                  type="submit"
-                  className="bg-blue-500 rounded-md p-2 mt-1 ml-2 w-40"
-                >
-                  Upload
-                </button>
-                <button
-                  onClick={deleteProfileImage}
-                  className="bg-red-500 rounded-md p-2 mt-1 ml-2 w-40"
-                >
-                  Delete
-                </button>
-              </form>
-              <h2 className="text-2xl font-bold">{name || username}</h2>
-              <p className="text-gray-600">{username}</p>
+              <div className="flex flex-col justify-center items-center mt-4">
+                <h2 className="text-2xl font-bold">{name || username}</h2>
+                <p className="text-gray-600">{username}</p>
+              </div>
             </div>
             {/* change password */}
             <div className="mt-12 space-y-4 w-full px-72">
@@ -349,9 +417,6 @@ const ProfilePage = () => {
                 >
                   Change Password
                 </button>
-                {/* {changePasswordError && (
-                  <p className="text-red-500">{changePasswordError}</p>
-                )} */}
               </form>
             </div>
             {/* delete account */}
