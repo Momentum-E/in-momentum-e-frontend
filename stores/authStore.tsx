@@ -70,6 +70,10 @@ export const useAuthStore = create(
           throw error;
         }
       },
+      setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
+      setName: (name: string) => set({ name }),
+      setUsername: (username: string) => set({ username }),
+      setUserId: (userId: string) => set({ userId }),
     }),
     {
       name: "authStorage",

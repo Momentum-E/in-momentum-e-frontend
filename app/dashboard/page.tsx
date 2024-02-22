@@ -16,7 +16,7 @@ import { ChargeChart } from "@/components/dashboard/ChargeChart";
 import { UsageChart } from "@/components/dashboard/UsageChart";
 import { BatteryHealthChart } from "@/components/dashboard/BatteryHealthChart";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
-import { removeCookie } from "typescript-cookie";
+import { getCookie, getCookies, removeCookie } from "typescript-cookie";
 
 type AuthStore = {
   isAuthenticated: boolean;
@@ -25,6 +25,10 @@ type AuthStore = {
   userImageUrl: string;
   refreshToken(username: string): Promise<void>;
   setUserImageUrl(url: string): void;
+  setIsAuthenticated(isAuthenticated: boolean): void;
+  setName(name: string): void;
+  setUsername(username: string): void;
+  setUserId(userId: string): void;
 };
 
 type Vehicle = {
@@ -88,6 +92,10 @@ const Dashboard = () => {
     userImageUrl,
     refreshToken,
     setUserImageUrl,
+    setIsAuthenticated,
+    setName,
+    setUsername,
+    setUserId,
   } = useAuthStore() as AuthStore;
   console.log(isAuthenticated, username);
 
@@ -109,12 +117,38 @@ const Dashboard = () => {
       router.push("/dashboard");
       fetchUserVehicles();
       fetchProfileImage();
+      console.log(getCookies());
     }
   }, [isAuthenticated, router]);
 
-  const fetchUserVehicles = async () => {
-    console.log("fetchUserVehicles called");
+  const handleTokenRefresh = async () => {
+    await refreshToken(userId);
+  };
+
+  const handleUnauthorized = () => {
     try {
+      console.log("handleUnauthorized()");
+      // console.log(localStorage.getItem("authStorage"));
+      setIsAuthenticated(false);
+      setUsername("");
+      setUserId("");
+      setName("");
+      
+      removeCookie("refreshToken");
+      removeCookie("idToken");
+      removeCookie("accessToken");
+      router.push("/signin");
+      // console.log("handleUnauthorized() closed");
+    } catch (error) {
+      console.error("Error handling unauthorized:", error);
+      // Handle error appropriately, such as fallback redirection
+    }
+  };
+
+  const fetchUserVehicles: () => Promise<void> = async () => {
+    try {
+      console.log("fetchUserVehicles called");
+
       const response = await fetch("http://localhost:8080/user/get-vehicles", {
         method: "POST",
         headers: {
@@ -122,37 +156,26 @@ const Dashboard = () => {
         },
         body: JSON.stringify({ email: username }),
         credentials: "include",
-      })
-        .then(async (response) => {
-          console.log(response);
-          if (response.status === 403) {
-            // Trigger token refresh flow
-            await refreshToken(userId);
-            // Retry the original request with the refreshed token
-            await fetchUserVehicles();
-          } else if (response.status === 401) {
-            console.log(response.status);
-            localStorage.removeItem("authStorage");
-            removeCookie("refreshToken");
-            removeCookie("idToken");
-            removeCookie("accessToken");
-            router.push("/signin");
-          } else if (!response.ok) {
-            throw new Error("Failed to fetch user vehicles");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("setVehicles", data.vehicles);
-          // Set the fetched vehicles in state
-          setVehicles(data.vehicles);
-        })
-        .catch((error) => {
-          console.error("Error fetching user vehicles:", error.message);
-          // Handle error appropriately
-        });
+      });
+
+      if (response.status === 403) {
+        await handleTokenRefresh();
+        return fetchUserVehicles(); // Retry the original request with the refreshed token
+      }
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          handleUnauthorized();
+        } else {
+          throw new Error("Failed to fetch user vehicles");
+        }
+      }
+
+      const data = await response.json();
+      console.log("setVehicles", data.vehicles);
+      setVehicles(data.vehicles);
     } catch (error) {
-      console.error("Error fetching user vehicles:", error);
+      console.error("Error fetching user vehicles:", error.message);
       // Handle error appropriately
     }
   };
@@ -173,20 +196,21 @@ const Dashboard = () => {
 
       if (response.ok) {
         const blob = await response.blob(); // Get the image data as a blob
-        console.log(blob);
         const imageUrl = URL.createObjectURL(blob); // Create a local URL for the fetched image
-        console.log(imageUrl);
         setImageUrl(imageUrl);
         setUserImageUrl(imageUrl);
-      } else if (response.status == 403) {
+      } else if (response.status === 403) {
         await refreshToken(userId);
         await fetchProfileImage();
+      } else if (response.status === 401) {
+        handleUnauthorized();
       } else {
         setUserImageUrl("");
         throw new Error("Network response was not ok.");
       }
     } catch (error) {
       console.error("There was a problem fetching profile picture:", error);
+      // Handle error appropriately
     }
   };
 
@@ -322,15 +346,18 @@ const Dashboard = () => {
                     <div className="p-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
                         viewBox="0 0 24 24"
-                        fill="#1f2937"
-                        className="w-10 h-10 transition-transform transform hover:scale-110"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-map-pin w-10 h-10 transition-transform transform hover:scale-110"
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-                          clipRule="evenodd"
-                        />
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                        <circle cx="12" cy="10" r="3" />
                       </svg>
                     </div>
                     <div className="text-sm w-full">
