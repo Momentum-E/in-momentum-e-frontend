@@ -1,12 +1,15 @@
 "use client";
 
 import { FormEvent, useState, useEffect, useRef } from "react";
-import { ProfileNav } from "@/components/profile/ProfileNav";
+
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getCookie, setCookie } from "typescript-cookie";
 import DefaultUserImage from "@/public/abcd.jpg";
+
+import { ProfileNav } from "@/components/profile/ProfileNav";
+import UpdateUserDetails from "@/components/profile/UpdateUserDetails";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -363,6 +366,9 @@ const ProfilePage = () => {
                 <h2 className="text-2xl font-bold">{name || username}</h2>
                 <p className="text-gray-600">{username}</p>
               </div>
+            </div>
+            <div className="mt-12 space-y-4 w-full px-72">
+              <UpdateUserDetails />
             </div>
             {/* change password */}
             <div className="mt-12 space-y-4 w-full px-72">
