@@ -20,15 +20,7 @@ export default function Home() {
   const pathname = usePathname();
 
   const { isAuthenticated } = useAuthStore() as AuthStore;
-
-  // useEffect(() => {
-  //   // Redirect to dashboard if user is authenticated and not on the dashboard page
-  //   if (isAuthenticated && pathname !== "/dashboard") {
-  //     router.push("/dashboard");
-  //   }
-  // }, [isAuthenticated, router]);
-
-
+  
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />

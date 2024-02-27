@@ -35,9 +35,6 @@ export default function Navbar() {
               >
                 Dashboard
               </Link>
-              <Link className="text-white hover:text-blue-800" href="/profile">
-                Profile
-              </Link>
               <LogoutButton />
             </>
           ) : (
