@@ -106,7 +106,8 @@ const Dashboard = () => {
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(
     null
   );
-
+  
+  
   useEffect(() => {
     // If the user is not authenticated, redirect to the home page
     if (!isAuthenticated) {
@@ -250,6 +251,7 @@ const Dashboard = () => {
       .then((data) => {
         console.log("Vehicle deleted successfully:", data.message);
         toast.success(data.message);
+        setSelectedVehicle(null);
         // Optionally, we can update the vehicles state to reflect the changes
         // For example, refetch user's vehicles
         fetchUserVehicles();
@@ -438,7 +440,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex flex-col justify-center items-center border-black bg-gray-100 rounded-lg shadow-xl w-full  mb-6 mt-5 p-6">
                     <div className="flex justify-between w-full text-lg font-light text-gray-800">
-                      <div className=" ">Charging Pattern</div>
+                      <div className="">Charging Pattern</div>
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
                         <span className="block">Total Energy Consumed</span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
@@ -452,7 +454,7 @@ const Dashboard = () => {
                     <div className="flex justify-evenly text-sm">
                       <div className="flex flex-col justify-evenly h-full">
                         <div className="">
-                          <div>Average SOC</div>
+                          <div className="font-light">Average SOC</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Charging_Pattern
@@ -461,7 +463,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div>Connector Type</div>
+                          <div className="font-light">Connector Type</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Charging_Pattern
@@ -477,7 +479,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex flex-col justify-evenly h-full">
                         <div>
-                          <div>Total Charging Sessions</div>
+                          <div className="font-light">Total Charging Sessions</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Charging_Pattern
@@ -486,7 +488,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div>Average Charging Rate</div>
+                          <div className="font-light">Average Charging Rate</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Charging_Pattern
@@ -513,7 +515,7 @@ const Dashboard = () => {
                     <div className="flex text-sm">
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
-                          <div>Avg Daily Km Driven</div>
+                          <div className="font-light">Avg Daily Km Driven</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -522,7 +524,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div>Temperature High/Low</div>
+                          <div className="font-light">Temperature High/Low</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -533,13 +535,13 @@ const Dashboard = () => {
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
-                          <div>SOC Range</div>
+                          <div className="font-light">SOC Range</div>
                           <div>
                             {selectedVehicle.Vehicle_Info.Usage.SOC_Range}
                           </div>
                         </div>
                         <div>
-                          <div>Range Observed Max/Min ( Km )</div>
+                          <div className="font-light">Range Observed Max/Min ( Km )</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -550,7 +552,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
-                          <div>Real Pange Observed</div>
+                          <div className="font-light">Real Pange Observed</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -559,7 +561,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div>Observed v/s EPA/WLTP provided</div>
+                          <div className="font-light">Observed v/s EPA/WLTP provided</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -576,7 +578,7 @@ const Dashboard = () => {
                         Battery Health
                       </div>
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
-                        <span className="block">State Of Health</span>
+                        <span className="block font-light">State Of Health</span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
                           {
                             selectedVehicle.Vehicle_Info.Battery_Health
@@ -595,13 +597,13 @@ const Dashboard = () => {
                     </div>
                     <div className="flex justify-between w-full text-sm">
                       <div className="flex flex-col justify-center items-start">
-                        <div>SoH</div>
+                        <div className="font-light">SoH</div>
                         <div>
                           {selectedVehicle.Vehicle_Info.Battery_Health.SoH}
                         </div>
                       </div>
                       <div>
-                        <div>Estimated Degradation</div>
+                        <div className="font-light">Estimated Degradation</div>
                         <div>
                           {
                             selectedVehicle.Vehicle_Info.Battery_Health
@@ -610,7 +612,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div>
-                        <div>Battery Chemistry</div>
+                        <div className="font-light">Battery Chemistry</div>
                         <div>
                           {
                             selectedVehicle.Vehicle_Info.Battery_Health

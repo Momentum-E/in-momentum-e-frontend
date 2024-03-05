@@ -20,6 +20,16 @@ export default function Home() {
   const pathname = usePathname();
 
   const { isAuthenticated } = useAuthStore() as AuthStore;
+
+  useEffect(() => {
+    if(!isAuthenticated){
+      router.push("/signin");
+    }
+    else if(isAuthenticated){
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated])
+  
   
   return (
     <div className="flex flex-col min-h-screen">

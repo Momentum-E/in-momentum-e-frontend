@@ -68,12 +68,12 @@ export function ProfileNav() {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">
-                <Link
+                {/* <Link
                   href="/"
                   className="block px-4 py-2 text-gray-800 hover:bg-blue-200"
                 >
                   Home
-                </Link>
+                </Link> */}
                 <Link
                   href="/dashboard"
                   className="block px-4 py-2 text-gray-800 hover:bg-blue-200"
