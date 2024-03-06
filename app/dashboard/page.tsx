@@ -111,14 +111,17 @@ const Dashboard = () => {
     try {
       // console.log("fetchUserVehicles called");
 
-      const response = await fetch("https://in-momentum-e-backend.onrender.com/user/get-vehicles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: username }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://in-momentum-e-backend.onrender.com/user/get-vehicles",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: username }),
+          credentials: "include",
+        }
+      );
 
       if (response.status === 403) {
         await handleTokenRefresh();
@@ -166,8 +169,7 @@ const Dashboard = () => {
         await fetchProfileImage();
       } else if (response.status === 401) {
         handleUnauthorized();
-      } 
-      else {
+      } else {
         setUserImageUrl("");
         // throw new Error("Network response was not ok.");
       }
@@ -176,8 +178,7 @@ const Dashboard = () => {
       // Handle error appropriately
     }
   };
-  
-  
+
   useEffect(() => {
     // If the user is not authenticated, redirect to the home page
     if (!isAuthenticated) {
@@ -204,7 +205,7 @@ const Dashboard = () => {
       setUsername("");
       setUserId("");
       setName("");
-      
+
       removeCookie("refreshToken");
       removeCookie("idToken");
       removeCookie("accessToken");
@@ -226,18 +227,21 @@ const Dashboard = () => {
     } = vehicle;
 
     // Send a request to delete the vehicle
-    await fetch("https://in-momentum-e-backend.onrender.com/user/deleteVehicle", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: username,
-        vehicleId: VEHICLE_ID,
-        serialNumber: SERIAL_NUMBER,
-      }),
-      credentials: "include",
-    })
+    await fetch(
+      "https://in-momentum-e-backend.onrender.com/user/deleteVehicle",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: username,
+          vehicleId: VEHICLE_ID,
+          serialNumber: SERIAL_NUMBER,
+        }),
+        credentials: "include",
+      }
+    )
       .then(async (response) => {
         if (!response.ok) {
           toast.error(response.statusText);
@@ -480,7 +484,9 @@ const Dashboard = () => {
                       </div>
                       <div className="flex flex-col justify-evenly h-full">
                         <div>
-                          <div className="font-light">Total Charging Sessions</div>
+                          <div className="font-light">
+                            Total Charging Sessions
+                          </div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Charging_Pattern
@@ -489,7 +495,9 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="font-light">Average Charging Rate</div>
+                          <div className="font-light">
+                            Average Charging Rate
+                          </div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Charging_Pattern
@@ -542,7 +550,9 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="font-light">Range Observed Max/Min ( Km )</div>
+                          <div className="font-light">
+                            Range Observed Max/Min ( Km )
+                          </div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -562,7 +572,9 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="font-light">Observed v/s EPA/WLTP provided</div>
+                          <div className="font-light">
+                            Observed v/s EPA/WLTP provided
+                          </div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
@@ -579,7 +591,9 @@ const Dashboard = () => {
                         Battery Health
                       </div>
                       <div className="text-sm border border-gray-800  text-gray-800 rounded-md p-2">
-                        <span className="block font-light">State Of Health</span>
+                        <span className="block font-light">
+                          State Of Health
+                        </span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
                           {
                             selectedVehicle.Vehicle_Info.Battery_Health

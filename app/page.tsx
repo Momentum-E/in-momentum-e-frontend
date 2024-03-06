@@ -22,15 +22,13 @@ export default function Home() {
   const { isAuthenticated } = useAuthStore() as AuthStore;
 
   useEffect(() => {
-    if(!isAuthenticated){
+    if (!isAuthenticated) {
       router.push("/signin");
-    }
-    else if(isAuthenticated){
+    } else if (isAuthenticated) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, router])
-  
-  
+  }, [isAuthenticated, router]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
