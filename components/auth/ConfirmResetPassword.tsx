@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -60,59 +60,61 @@ const ConfirmPasswordReset = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16">
-      <ToastContainer />
-      <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
-        Reset Password
-      </h2>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="max-w-md mx-auto mt-16">
+        <ToastContainer />
+        <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
+          Reset Password
+        </h2>
 
-      <p className="mb-4 text-blue-600 text-center">
-        A code has been sent to your email: <strong>{email}</strong>
-      </p>
+        <p className="mb-4 text-blue-600 text-center">
+          A code has been sent to your email: <strong>{email}</strong>
+        </p>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div>
-          <label
-            htmlFor="confirmationCode"
-            className="block text-sm font-medium text-blue-600"
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="confirmationCode"
+              className="block text-sm font-medium text-blue-600"
+            >
+              Confirmation Code
+            </label>
+            <input
+              type="text"
+              id="confirmationCode"
+              name="confirmationCode"
+              className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(e) => setConfirmationCode(e.target.value)}
+              autoComplete="code"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="newPassword"
+              className="block text-sm font-medium text-blue-600"
+            >
+              New Password
+            </label>
+            <input
+              type="password"
+              id="newPassword"
+              name="newPassword"
+              autoComplete="new-password"
+              className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400 w-full"
           >
-            Confirmation Code
-          </label>
-          <input
-            type="text"
-            id="confirmationCode"
-            name="confirmationCode"
-            className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            onChange={(e) => setConfirmationCode(e.target.value)}
-            autoComplete="code"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="newPassword"
-            className="block text-sm font-medium text-blue-600"
-          >
-            New Password
-          </label>
-          <input
-            type="password"
-            id="newPassword"
-            name="newPassword"
-            autoComplete="new-password"
-            className="mt-1 p-3 w-full border rounded-md focus:outline-none focus:border-blue-500"
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400 w-full"
-        >
-          Confirm Reset
-        </button>
-      </form>
-    </div>
+            Confirm Reset
+          </button>
+        </form>
+      </div>
+    </Suspense>
   );
 };
 
