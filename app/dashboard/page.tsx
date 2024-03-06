@@ -106,45 +106,6 @@ const Dashboard = () => {
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(
     null
   );
-  
-  
-  useEffect(() => {
-    // If the user is not authenticated, redirect to the home page
-    if (!isAuthenticated) {
-      // console.log("isAuthenticated", isAuthenticated);
-      router.push("/signin");
-    } else {
-      // Fetch user's vehicles when authenticated
-      router.push("/dashboard");
-      fetchUserVehicles();
-      fetchProfileImage();
-      // console.log(getCookies());
-    }
-  }, [isAuthenticated, router]);
-
-  const handleTokenRefresh = async () => {
-    await refreshToken(userId);
-  };
-
-  const handleUnauthorized = () => {
-    try {
-      // console.log("handleUnauthorized()");
-      // console.log(localStorage.getItem("authStorage"));
-      setIsAuthenticated(false);
-      setUsername("");
-      setUserId("");
-      setName("");
-      
-      removeCookie("refreshToken");
-      removeCookie("idToken");
-      removeCookie("accessToken");
-      router.push("/signin");
-      // console.log("handleUnauthorized() closed");
-    } catch (error) {
-      console.error("Error handling unauthorized:", error);
-      // Handle error appropriately, such as fallback redirection
-    }
-  };
 
   const fetchUserVehicles: () => Promise<void> = async () => {
     try {
@@ -213,6 +174,45 @@ const Dashboard = () => {
     } catch (error) {
       console.error("There was a problem fetching profile picture:", error);
       // Handle error appropriately
+    }
+  };
+  
+  
+  useEffect(() => {
+    // If the user is not authenticated, redirect to the home page
+    if (!isAuthenticated) {
+      // console.log("isAuthenticated", isAuthenticated);
+      router.push("/signin");
+    } else {
+      // Fetch user's vehicles when authenticated
+      router.push("/dashboard");
+      fetchUserVehicles();
+      fetchProfileImage();
+      // console.log(getCookies());
+    }
+  }, [isAuthenticated, router, fetchUserVehicles, fetchProfileImage]);
+
+  const handleTokenRefresh = async () => {
+    await refreshToken(userId);
+  };
+
+  const handleUnauthorized = () => {
+    try {
+      // console.log("handleUnauthorized()");
+      // console.log(localStorage.getItem("authStorage"));
+      setIsAuthenticated(false);
+      setUsername("");
+      setUserId("");
+      setName("");
+      
+      removeCookie("refreshToken");
+      removeCookie("idToken");
+      removeCookie("accessToken");
+      router.push("/signin");
+      // console.log("handleUnauthorized() closed");
+    } catch (error) {
+      console.error("Error handling unauthorized:", error);
+      // Handle error appropriately, such as fallback redirection
     }
   };
 

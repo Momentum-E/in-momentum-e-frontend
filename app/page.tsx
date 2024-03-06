@@ -28,7 +28,7 @@ export default function Home() {
     else if(isAuthenticated){
       router.push("/dashboard");
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, router])
   
   
   return (
