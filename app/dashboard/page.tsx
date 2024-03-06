@@ -150,7 +150,7 @@ const Dashboard = () => {
     try {
       // console.log("fetchUserVehicles called");
 
-      const response = await fetch("http://localhost:8080/user/get-vehicles", {
+      const response = await fetch("https://in-momentum-e-backend.onrender.com/user/get-vehicles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -184,7 +184,7 @@ const Dashboard = () => {
   const fetchProfileImage = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/user-data/profile-picture`,
+        `https://in-momentum-e-backend.onrender.com/user-data/profile-picture`,
         {
           method: "POST",
           credentials: "include",
@@ -226,7 +226,7 @@ const Dashboard = () => {
     } = vehicle;
 
     // Send a request to delete the vehicle
-    await fetch("http://localhost:8080/user/deleteVehicle", {
+    await fetch("https://in-momentum-e-backend.onrender.com/user/deleteVehicle", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -21,7 +21,7 @@ export const useAuthStore = create(
       logout: async () => {
         try {
           const response = await fetch(
-            "http://localhost:8080/auth/global-sign-out",
+            "https://in-momentum-e-backend.onrender.com/auth/global-sign-out",
             {
               method: "POST",
               credentials: "include",
@@ -43,7 +43,7 @@ export const useAuthStore = create(
       refreshToken: async (userId: string) => {
         try {
           const response = await fetch(
-            "http://localhost:8080/auth/refresh-auth",
+            "https://in-momentum-e-backend.onrender.com/auth/refresh-auth",
             {
               method: "POST",
               headers: {

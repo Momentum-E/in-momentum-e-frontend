@@ -36,7 +36,7 @@ export default function Signin() {
 
   const getCurrentUserEmailAndUserId = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/get-user", {
+      const response = await fetch("https://in-momentum-e-backend.onrender.com/auth/get-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export default function Signin() {
     const { username, password } = formData;
 
     try {
-      const response = await fetch("http://localhost:8080/auth/initiate-auth", {
+      const response = await fetch("https://in-momentum-e-backend.onrender.com/auth/initiate-auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
