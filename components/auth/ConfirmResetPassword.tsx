@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -11,6 +11,7 @@ interface Auth {
   userId: string;
   refreshToken(userId: string): void;
 }
+
 const ConfirmPasswordReset = () => {
   const { userId, refreshToken } = useAuthStore() as Auth;
   const router = useRouter();
@@ -60,7 +61,7 @@ const ConfirmPasswordReset = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    
       <div className="max-w-md mx-auto mt-16">
         <ToastContainer />
         <h2 className="text-3xl font-semibold mb-6 text-blue-800 text-center">
@@ -114,7 +115,6 @@ const ConfirmPasswordReset = () => {
           </button>
         </form>
       </div>
-    </Suspense>
   );
 };
 
