@@ -43,9 +43,9 @@ export default function Register() {
 
       if (response.ok) {
         // Registration successful, show confirmation modal
-        console.log("Registration successful, show confirmation modal");
+        // console.log("Registration successful, show confirmation modal");
         setShowConfirmation(true);
-        console.log(showConfirmation);
+        // console.log(showConfirmation);
       } else {
         // Registration failed
         const resData = await response.json();
@@ -59,10 +59,10 @@ export default function Register() {
   };
 
   const handleConfirmEmail = async (confirmationCode: string) => {
-    console.log("inside handleConfirmEmail");
+    // console.log("inside handleConfirmEmail");
     const { email, name } = formData;
 
-    console.log(email, confirmationCode, name);
+    // console.log(email, confirmationCode, name);
     try {
       const response = await fetch(
         "http://localhost:8080/auth/confirm-sign-up",
@@ -81,7 +81,7 @@ export default function Register() {
 
       if (response.ok) {
         // Email confirmation successful, you can redirect or show a success message
-        console.log("Email confirmation successful");
+        // console.log("Email confirmation successful");
         setShowConfirmation(false);
         // Show success toast
         toast.success("Signup Successfull! Redirecting to Sign-in page...");

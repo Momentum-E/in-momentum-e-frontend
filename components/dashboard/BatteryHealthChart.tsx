@@ -8,7 +8,7 @@ interface UsageChartProps {
 }
 
 export function BatteryHealthChart({Monthly_SOH_Data}: UsageChartProps): JSX.Element {
-  console.log(Monthly_SOH_Data);
+  // console.log(Monthly_SOH_Data);
   const option: ApexCharts.ApexOptions = {
     chart: {
       height: 350,

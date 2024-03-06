@@ -25,7 +25,7 @@ export function DashboardNav({
     useAuthStore() as AuthStore;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  console.log("imageUrl inside dashboardNAV", userImageUrl);
+  // console.log("imageUrl inside dashboardNAV", userImageUrl);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);

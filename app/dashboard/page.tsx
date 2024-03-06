@@ -97,7 +97,7 @@ const Dashboard = () => {
     setUsername,
     setUserId,
   } = useAuthStore() as AuthStore;
-  console.log(isAuthenticated, username);
+  // console.log(isAuthenticated, username);
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -111,14 +111,14 @@ const Dashboard = () => {
   useEffect(() => {
     // If the user is not authenticated, redirect to the home page
     if (!isAuthenticated) {
-      console.log("isAuthenticated", isAuthenticated);
+      // console.log("isAuthenticated", isAuthenticated);
       router.push("/signin");
     } else {
       // Fetch user's vehicles when authenticated
       router.push("/dashboard");
       fetchUserVehicles();
       fetchProfileImage();
-      console.log(getCookies());
+      // console.log(getCookies());
     }
   }, [isAuthenticated, router]);
 
@@ -128,7 +128,7 @@ const Dashboard = () => {
 
   const handleUnauthorized = () => {
     try {
-      console.log("handleUnauthorized()");
+      // console.log("handleUnauthorized()");
       // console.log(localStorage.getItem("authStorage"));
       setIsAuthenticated(false);
       setUsername("");
@@ -148,7 +148,7 @@ const Dashboard = () => {
 
   const fetchUserVehicles: () => Promise<void> = async () => {
     try {
-      console.log("fetchUserVehicles called");
+      // console.log("fetchUserVehicles called");
 
       const response = await fetch("http://localhost:8080/user/get-vehicles", {
         method: "POST",
@@ -173,9 +173,9 @@ const Dashboard = () => {
       }
 
       const data = await response.json();
-      console.log("setVehicles", data.vehicles);
+      // console.log("setVehicles", data.vehicles);
       setVehicles(data.vehicles);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching user vehicles:", error.message);
       // Handle error appropriately
     }
@@ -205,9 +205,10 @@ const Dashboard = () => {
         await fetchProfileImage();
       } else if (response.status === 401) {
         handleUnauthorized();
-      } else {
+      } 
+      else {
         setUserImageUrl("");
-        throw new Error("Network response was not ok.");
+        // throw new Error("Network response was not ok.");
       }
     } catch (error) {
       console.error("There was a problem fetching profile picture:", error);
@@ -217,7 +218,7 @@ const Dashboard = () => {
 
   const handleDelete = async (vehicle: Vehicle) => {
     // if (!selectedVehicle) return; // No vehicle selected, do nothing
-    console.log("delete called");
+    // console.log("delete called");
 
     const {
       VEHICLE_ID,
@@ -249,7 +250,7 @@ const Dashboard = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Vehicle deleted successfully:", data.message);
+        // console.log("Vehicle deleted successfully:", data.message);
         toast.success(data.message);
         setSelectedVehicle(null);
         // Optionally, we can update the vehicles state to reflect the changes

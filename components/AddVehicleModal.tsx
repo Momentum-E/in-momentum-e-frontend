@@ -55,7 +55,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({
         return response.json();
       })
       .then((data) => {
-        console.log("Vehicle added successfully:", data);
+        // console.log("Vehicle added successfully:", data);
         // Close the modal or perform any other necessary actions
         onClose();
         onAddVehicle();

@@ -46,9 +46,9 @@ export default function Signin() {
       });
       // console.log("response", response.json);
       if (response.ok) {
-        console.log("get user details successful");
+        // console.log("get user details successful");
         const userData = await response.json(); // Extract JSON data from response
-        console.log("userData", userData);
+        // console.log("userData", userData);
         const { email, userId, name } = userData; // Destructure email and userId from userData
         return { email, userId, name }; // Return an object containing email and userId
       } else {
@@ -79,7 +79,7 @@ export default function Signin() {
 
       if (response.ok) {
         // Sign in successful
-        console.log("Sign in successful");
+        // console.log("Sign in successful");
         const userData = await getCurrentUserEmailAndUserId();
 
         // const userId = userData?.userId;

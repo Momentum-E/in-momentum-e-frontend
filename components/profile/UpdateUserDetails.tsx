@@ -34,7 +34,7 @@ const UpdateUserDetails: React.FC = () => {
         throw new Error("Failed to update user details");
       }
 
-      console.log("User details updated successfully");
+      // console.log("User details updated successfully");
       setName(newName);
     } catch (error: any) {
       console.error("Error updating user details:", error.message);

@@ -71,9 +71,9 @@ const ProfilePage = () => {
 
       if (response.ok) {
         const blob = await response.blob(); // Get the image data as a blob
-        console.log(blob);
+        // console.log(blob);
         const imageUrl = URL.createObjectURL(blob); // Create a local URL for the fetched image
-        console.log(imageUrl);
+        // console.log(imageUrl);
         setUserImageUrl(imageUrl);
       } else if (response.status == 403) {
         refreshToken(userId);
@@ -122,8 +122,8 @@ const ProfilePage = () => {
   const handleSubmit = async (file: string | Blob) => {
     // e.preventDefault();
 
-    console.log("handleSubmit()");
-    console.log("file", file);
+    // console.log("handleSubmit()");
+    // console.log("file", file);
     if (!file) return null;
     const formData = new FormData();
     formData.append("image", file);
@@ -140,7 +140,7 @@ const ProfilePage = () => {
       );
       if (response.ok) {
         const data = await response.json();
-        console.log("Image uploaded:", data);
+        // console.log("Image uploaded:", data);
         toast.success("Image Upload Successfull!");
         await fetchProfileImage();
         setFile("");
@@ -158,15 +158,15 @@ const ProfilePage = () => {
   };
 
   const handleSvgClick = () => {
-    console.log("handleSvgClick");
+    // console.log("handleSvgClick");
     if (fileInputRef.current) {
-      console.log(fileInputRef.current);
+      // console.log(fileInputRef.current);
       fileInputRef.current.click();
     }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handleFileChange()");
+    // console.log("handleFileChange()");
     const file = e.target.files && e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       // Proceed only if the selected file is an image
@@ -183,7 +183,7 @@ const ProfilePage = () => {
   // Function to handle change password submit
   const handleChangePasswordSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(previousPassword, proposedPassword, username);
+    // console.log(previousPassword, proposedPassword, username);
     try {
       // Make a POST request to the backend route
       const response = await fetch(
