@@ -191,7 +191,7 @@ const Dashboard = () => {
       fetchProfileImage();
       // console.log(getCookies());
     }
-  }, [isAuthenticated, router, fetchUserVehicles, fetchProfileImage]);
+  }, [isAuthenticated, router]);
 
   const handleTokenRefresh = async () => {
     await refreshToken(userId);
