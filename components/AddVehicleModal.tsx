@@ -24,10 +24,10 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({
   const { username, userId, refreshToken } = useAuthStore() as AuthStore;
   const [deviceId, setDeviceId] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
-  const [company, setCompany] = useState("");
+  // const [company, setCompany] = useState("");
 
   // You can replace this with your actual list of vehicle manufacturing companies
-  const manufacturingCompanies = ["Company A", "Company B", "Company C"];
+  // const manufacturingCompanies = ["Company A", "Company B", "Company C"];
 
   const handleAddVehicle = async () => {
     const requestBody = {
@@ -108,7 +108,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({
         </div>
 
         {/* Company */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             Company
           </label>
@@ -126,7 +126,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <button
           onClick={handleAddVehicle}
