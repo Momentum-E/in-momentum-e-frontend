@@ -24,6 +24,8 @@ export function BatteryHealthChart({Monthly_SOH_Data}: UsageChartProps): JSX.Ele
       title: {
         text: "SOH",
       },
+      max: 100,
+      min: 90
     },
     xaxis: {
       categories: [
