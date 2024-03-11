@@ -21,7 +21,7 @@ export const useAuthStore = create(
       logout: async () => {
         try {
           const response = await fetch(
-            "https://in-momentum-e-backend.onrender.com/auth/global-sign-out",
+            "http://localhost:8080/auth/global-sign-out",
             {
               method: "POST",
               credentials: "include",
@@ -32,10 +32,14 @@ export const useAuthStore = create(
             set({ isAuthenticated: false, username: "", userId: "", name: "" });
             localStorage.removeItem("authStorage");
           } else {
+            set({ isAuthenticated: false, username: "", userId: "", name: "" });
+            localStorage.removeItem("authStorage");
             console.error("Logout failed");
-            throw new Error("Logout failed");
+            // throw new Error("Logout failed");
           }
         } catch (error) {
+          set({ isAuthenticated: false, username: "", userId: "", name: "" });
+          localStorage.removeItem("authStorage");
           console.error("Error during logout:", error);
           throw error;
         }
@@ -43,7 +47,7 @@ export const useAuthStore = create(
       refreshToken: async (userId: string) => {
         try {
           const response = await fetch(
-            "https://in-momentum-e-backend.onrender.com/auth/refresh-auth",
+            "http://localhost:8080/auth/refresh-auth",
             {
               method: "POST",
               headers: {
