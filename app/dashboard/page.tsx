@@ -563,7 +563,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
-                          <div className="font-light">Real Pange Observed</div>
+                          <div className="font-light">Real Range Observed</div>
                           <div>
                             {
                               selectedVehicle.Vehicle_Info.Usage
