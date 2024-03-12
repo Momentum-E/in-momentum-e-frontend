@@ -77,6 +77,8 @@ type Vehicle = {
       Battery_Chemistry: string;
       Monthly_SOH_Data: [];
     };
+    RUL: string,
+    EOL: string,
     Connected_On: string;
     Data_Points_Collected: string;
     Average_Miles_Driven: [];
@@ -636,6 +638,16 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="flex  border-black bg-gray-100 text-gray-800 rounded-lg shadow-xl w-full  mr-6 mb-6 p-6 text-lg font-light">
+                    <div>End Of Life : <span className="text-sm font-normal">{selectedVehicle.Vehicle_Info.EOL}</span></div>
+                    {/* <div className="text-sm font-medium">DD-MM-YYY</div> */}
+                  </div>
+                  <div className="flex flex-col border-black bg-gray-100 rounded-lg shadow-xl w-full mb-6 p-6 text-lg font-light text-gray-800">
+                    <div>Remaining Useful Life : <span className="text-sm font-normal">{selectedVehicle.Vehicle_Info.RUL}</span></div>
+                    {/* <div>1200 cycles</div> */}
                   </div>
                 </div>
               </div>
