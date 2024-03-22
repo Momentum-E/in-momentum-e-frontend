@@ -17,6 +17,7 @@ import { UsageChart } from "@/components/dashboard/UsageChart";
 import { BatteryHealthChart } from "@/components/dashboard/BatteryHealthChart";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { getCookie, getCookies, removeCookie } from "typescript-cookie";
+import UploadData from "@/components/dashboard/UploadData";
 
 type AuthStore = {
   isAuthenticated: boolean;
@@ -300,7 +301,8 @@ const Dashboard = () => {
         </div>
         <hr className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-black to-transparent"></hr>
         {/* <div className="h-px w-full bg-gradient-to-r from-transparent via-black to-transparent"></div> */}
-
+        
+        <UploadData />
         <button
           onClick={() => setAddVehicleModalOpen(true)}
           className="bg-blue-500 p-2 rounded-md hover:bg-blue-400 text-white h-10 w-full mb-2"
