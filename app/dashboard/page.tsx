@@ -272,7 +272,7 @@ const Dashboard = () => {
 
   const handleAddVehicle = () => {
     // Function to update the list of vehicles after adding a vehicle
-    toast.success("vehicle Added");
+    toast.success("Vehicle Added Successfully");
     fetchUserVehicles();
   };
 
@@ -288,7 +288,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex w-full h-full">
-      <ToastContainer />
+      <ToastContainer containerId="dashboardToast"/>
       {/* Left Section */}
       <div className="bg-gray-800 w-1/6 h-auto text-white p-4">
         <div className="flex items-center justify-center mb-2">
