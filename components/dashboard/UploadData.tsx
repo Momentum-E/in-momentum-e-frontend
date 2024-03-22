@@ -95,7 +95,7 @@ const UploadData = () => {
           <p className="text-blue-500">Drop the file here</p>
         ) : (
           <>
-            {!file && <p>Drag 'n' drop a CSV file here, or click to select</p>}
+            {!file && <p>Drag &apos;n&apos; drop a CSV file here, or click to select</p>}
             {file && (
               <p className="text-gray-500">Selected File: {file.name}</p>
             )}
