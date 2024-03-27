@@ -42,9 +42,9 @@ export default function Navbar() {
               <Link className="text-white hover:text-blue-800" href="/signin">
                 Sign In
               </Link>
-              <Link href="/register" className="text-white hover:text-blue-800">
+              {/* <Link href="/register" className="text-white hover:text-blue-800">
                 Register
-              </Link>
+              </Link> */}
             </>
           )}
         </div>

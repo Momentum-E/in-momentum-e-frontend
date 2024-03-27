@@ -163,10 +163,10 @@ export default function Signin() {
         </button>
       </form>
 
-      <div className="mt-4 text-blue-600 text-center">
-        <Link href="/register">Register</Link>
-        <span className="mx-2">|</span>
-        <Link href="/forgot-password">Forgot Password</Link>
+      <div className="mt-4 text-blue-600 text-start text-sm">
+        {/* <Link href="/register">Register</Link> */}
+        {/* <span className="mx-2">|</span> */}
+        <span>Forgot Password ? </span><Link href="/forgot-password" className="underline hover:text-blue-800">click here</Link>
       </div>
     </div>
   );

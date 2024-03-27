@@ -393,7 +393,7 @@ const Dashboard = () => {
                     </div>
                     <div className="text-sm w-full">
                       <h3 className="font-light text-sm">Connected On</h3>{" "}
-                      {selectedVehicle.Vehicle_Info.Connected_On}
+                      {selectedVehicle.Vehicle_Info.Connected_On.toString().split('T')[0]}
                     </div>
                   </div>
                   <div className="flex justify-start items-center bg-gray-100 rounded-lg shadow-xl w-full">
