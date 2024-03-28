@@ -39,7 +39,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link className="text-white hover:text-blue-800" href="/signin">
+              <Link className="text-blue-600 hover:text-blue-900 hover:bg-gray-200 hover:font-medium bg-gray-100 p-2 rounded-lg" href="/signin">
                 Sign In
               </Link>
               {/* <Link href="/register" className="text-white hover:text-blue-800">
