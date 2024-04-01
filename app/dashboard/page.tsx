@@ -64,7 +64,7 @@ type Vehicle = {
       Average_Charging_Rate: string;
     };
     Usage: {
-      Avg_Daily_Km_Driven: string;
+      Avg_Daily_km_Driven: string;
       Temperature_High_Low: string;
       SOC_Range: string;
       Range_Observed_Max_Min: string;
@@ -531,8 +531,7 @@ const Dashboard = () => {
                           <div className="font-light">Avg Daily Km Driven</div>
                           <div>
                             {
-                              selectedVehicle.Vehicle_Info.Usage
-                                .Avg_Daily_Km_Driven
+                              selectedVehicle.Vehicle_Info.Usage.Avg_Daily_km_Driven
                             }
                           </div>
                         </div>
