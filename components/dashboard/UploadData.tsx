@@ -10,7 +10,14 @@ const UploadData = () => {
 
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
-      setFile(acceptedFiles[0]);
+      const selectedFile = acceptedFiles[0];
+      const maxSize = 50 * 1024 * 1024; // 50 MB in bytes
+
+      if (selectedFile.size <= maxSize) {
+        setFile(selectedFile);
+      } else {
+        toast.error("File size exceeds the limit of 50 MB.");
+      }
     } else {
       toast.error("Please select a CSV file.");
     }
@@ -52,17 +59,16 @@ const UploadData = () => {
       const { uploadURL } = await response.json();
 
       const uploadResponse = await axios.put(uploadURL, file, {
-        onUploadProgress: progressEvent => {
+        onUploadProgress: (progressEvent) => {
           if (progressEvent.total !== null && progressEvent.total !== undefined) {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            console.log(`Upload Progress: ${percentCompleted}%`);
             setUploadStatus(`Upload Progress: ${percentCompleted}%`);
           } else {
-            console.log('Upload Progress: Total size unknown.');
+            console.log("Upload Progress: Total size unknown.");
           }
         },
         headers: {
-          'Content-Type': file.type,
+          "Content-Type": file.type,
         },
       });
 
@@ -95,7 +101,9 @@ const UploadData = () => {
           <p className="text-blue-500">Drop the file here</p>
         ) : (
           <>
-            {!file && <p>Drag &apos;n&apos; drop a CSV file here, or click to select</p>}
+            {!file && (
+              <p>Drag &apos;n&apos; drop a CSV file here, or click to select</p>
+            )}
             {file && (
               <p className="text-gray-500">Selected File: {file.name}</p>
             )}
