@@ -78,11 +78,32 @@ type Vehicle = {
       Battery_Chemistry: string;
       Monthly_SOH_Data: [];
     };
-    RUL: string,
-    EOL: string,
+    RUL: string;
+    EOL: string;
     Connected_On: string;
     Data_Points_Collected: string;
     Average_Miles_Driven: [];
+    Battery: {
+      odometer: String;
+      batteryCapacity: String;
+      vehicleModel: String;
+      modelYear: String;
+      formFactor: String;
+      averageSOC: Number;
+      totalChargingSessions: String;
+      averageChargingRate: String;
+      chargingRate: String;
+      SoH: String | null;
+      estimatedDegradation: String | null;
+      batteryChemistry: String;
+      SOCRange: String;
+      temperature_High_Low: String;
+      estimatedPowerOutput: String;
+      estimatedCapacityOutput: String;
+      speed_Max_Average: String;
+      avgDailyKmDriven: Number;
+      estimatedDailyEnergyOutput: String
+    };
   };
 };
 
@@ -114,17 +135,14 @@ const Dashboard = () => {
     try {
       // console.log("fetchUserVehicles called");
 
-      const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/user/get-vehicles",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: username }),
-          credentials: "include",
-        }
-      );
+      const response = await fetch("https://in-momentum-e-backend.onrender.com/user/get-vehicles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: username }),
+        credentials: "include",
+      });
 
       if (response.status === 403) {
         await handleTokenRefresh();
@@ -140,7 +158,7 @@ const Dashboard = () => {
       }
 
       const data = await response.json();
-      // console.log("setVehicles", data.vehicles);
+      console.log("setVehicles", data.vehicles);
       setVehicles(data.vehicles);
     } catch (error: any) {
       console.error("Error fetching user vehicles:", error.message);
@@ -230,21 +248,18 @@ const Dashboard = () => {
     } = vehicle;
 
     // Send a request to delete the vehicle
-    await fetch(
-      "https://in-momentum-e-backend.onrender.com/user/deleteVehicle",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: username,
-          vehicleId: VEHICLE_ID,
-          serialNumber: SERIAL_NUMBER,
-        }),
-        credentials: "include",
-      }
-    )
+    await fetch("https://in-momentum-e-backend.onrender.com/user/deleteVehicle", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: username,
+        vehicleId: VEHICLE_ID,
+        serialNumber: SERIAL_NUMBER,
+      }),
+      credentials: "include",
+    })
       .then(async (response) => {
         if (!response.ok) {
           toast.error(response.statusText);
@@ -288,7 +303,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex w-full h-full">
-      <ToastContainer containerId="dashboardToast"/>
+      <ToastContainer containerId="dashboardToast" />
       {/* Left Section */}
       <div className="bg-gray-800 w-1/6 h-auto text-white p-4">
         <div className="flex items-center justify-center mb-2">
@@ -301,7 +316,7 @@ const Dashboard = () => {
         </div>
         <hr className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-black to-transparent"></hr>
         {/* <div className="h-px w-full bg-gradient-to-r from-transparent via-black to-transparent"></div> */}
-        
+
         <UploadData />
         <button
           onClick={() => setAddVehicleModalOpen(true)}
@@ -393,7 +408,11 @@ const Dashboard = () => {
                     </div>
                     <div className="text-sm w-full">
                       <h3 className="font-light text-sm">Connected On</h3>{" "}
-                      {selectedVehicle.Vehicle_Info.Connected_On.toString().split('T')[0]}
+                      {
+                        selectedVehicle.Vehicle_Info.Connected_On.toString().split(
+                          "T"
+                        )[0]
+                      }
                     </div>
                   </div>
                   <div className="flex justify-start items-center bg-gray-100 rounded-lg shadow-xl w-full">
@@ -427,8 +446,8 @@ const Dashboard = () => {
                       Vehicle Info
                     </div>
                     <div className="text-gray-800">
-                      <span className="font-light">Odometer :</span>{" "}
-                      {selectedVehicle.Vehicle_Info.Odometer}
+                      <span className="font-light">Battery Cycle Number :</span>{" "}
+                      {selectedVehicle.Vehicle_Info.Battery.odometer}
                     </div>
                     <div>
                       <span className="font-light">Vehicle Model :</span>{" "}
@@ -444,7 +463,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <span className="font-light">Battery Capacity :</span>{" "}
-                      {selectedVehicle.Vehicle_Info.Battery_Capacity}
+                      {selectedVehicle.Vehicle_Info.Battery.batteryCapacity}
                     </div>
                   </div>
                   <div className="flex flex-col justify-center items-center border-black bg-gray-100 rounded-lg shadow-xl w-full  mb-6 mt-5 p-6">
@@ -465,10 +484,9 @@ const Dashboard = () => {
                         <div className="">
                           <div className="font-light">Average SOC</div>
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Charging_Pattern
-                                .Average_SOC
-                            }
+                            {selectedVehicle.Vehicle_Info.Battery.averageSOC
+                              .toFixed(2)
+                              .toString() + "%"}
                           </div>
                         </div>
                         <div>
@@ -483,7 +501,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex justify-center items-center transition-transform hover:scale-110">
                         <ChargeChart
-                          chargePercentage={selectedVehicle.SOC_START}
+                          chargePercentage={Number(selectedVehicle.Vehicle_Info.Battery.averageSOC.toFixed(2))}
                         />
                       </div>
                       <div className="flex flex-col justify-evenly h-full">
@@ -493,8 +511,8 @@ const Dashboard = () => {
                           </div>
                           <div>
                             {
-                              selectedVehicle.Vehicle_Info.Charging_Pattern
-                                .Total_Charging_Sessions
+                              selectedVehicle.Vehicle_Info.Battery
+                                .totalChargingSessions
                             }
                           </div>
                         </div>
@@ -503,10 +521,9 @@ const Dashboard = () => {
                             Average Charging Rate
                           </div>
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Charging_Pattern
-                                .Average_Charging_Rate
-                            }
+                            {parseFloat(
+                              selectedVehicle.Vehicle_Info.Battery.chargingRate.toString()
+                            ).toFixed(2) + "A"}
                           </div>
                         </div>
                       </div>
@@ -530,17 +547,16 @@ const Dashboard = () => {
                         <div className="mb-4">
                           <div className="font-light">Avg Daily Km Driven</div>
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Usage.Avg_Daily_km_Driven
-                            }
+                            {selectedVehicle.Vehicle_Info.Battery.avgDailyKmDriven.toString() +
+                              " km"}
                           </div>
                         </div>
                         <div>
                           <div className="font-light">Temperature High/Low</div>
                           <div>
                             {
-                              selectedVehicle.Vehicle_Info.Usage
-                                .Temperature_High_Low
+                              selectedVehicle.Vehicle_Info.Battery
+                                .temperature_High_Low
                             }
                           </div>
                         </div>
@@ -549,39 +565,36 @@ const Dashboard = () => {
                         <div className="mb-4">
                           <div className="font-light">SOC Range</div>
                           <div>
-                            {selectedVehicle.Vehicle_Info.Usage.SOC_Range}
+                            {selectedVehicle.Vehicle_Info.Battery.SOCRange}
                           </div>
                         </div>
                         <div>
                           <div className="font-light">
-                            Range Observed Max/Min ( Km )
+                            Estimated Daily Energy Output
                           </div>
                           <div>
                             {
-                              selectedVehicle.Vehicle_Info.Usage
-                                .Range_Observed_Max_Min
+                              selectedVehicle.Vehicle_Info.Battery.estimatedPowerOutput
                             }
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
-                          <div className="font-light">Real Range Observed</div>
+                          <div className="font-light">Speed Avg/Max</div>
                           <div>
                             {
-                              selectedVehicle.Vehicle_Info.Usage
-                                .Real_Range_Observed
+                              selectedVehicle.Vehicle_Info.Battery.speed_Max_Average + " km/h"
                             }
                           </div>
                         </div>
                         <div>
                           <div className="font-light">
-                            Observed v/s EPA/WLTP provided
+                            Estimated Daily Capacity Output
                           </div>
                           <div>
                             {
-                              selectedVehicle.Vehicle_Info.Usage
-                                .Observed_vs_EPA_WLTP_provided
+                              selectedVehicle.Vehicle_Info.Battery.estimatedDailyEnergyOutput
                             }
                           </div>
                         </div>
@@ -616,16 +629,14 @@ const Dashboard = () => {
                     <div className="flex justify-between w-full text-sm">
                       <div className="flex flex-col justify-center items-start">
                         <div className="font-light">SoH</div>
-                        <div>
-                          {selectedVehicle.Vehicle_Info.Battery_Health.SoH}
-                        </div>
+                        <div>{selectedVehicle.Vehicle_Info.Battery.SoH}</div>
                       </div>
                       <div>
                         <div className="font-light">Estimated Degradation</div>
                         <div>
                           {
-                            selectedVehicle.Vehicle_Info.Battery_Health
-                              .Estimated_Degradation
+                            selectedVehicle.Vehicle_Info.Battery
+                              .estimatedDegradation
                           }
                         </div>
                       </div>
@@ -633,8 +644,8 @@ const Dashboard = () => {
                         <div className="font-light">Battery Chemistry</div>
                         <div>
                           {
-                            selectedVehicle.Vehicle_Info.Battery_Health
-                              .Battery_Chemistry
+                            selectedVehicle.Vehicle_Info.Battery
+                              .batteryChemistry
                           }
                         </div>
                       </div>
@@ -643,11 +654,21 @@ const Dashboard = () => {
                 </div>
                 <div className="flex">
                   <div className="flex  border-black bg-gray-100 text-gray-800 rounded-lg shadow-xl w-full  mr-6 mb-6 p-6 text-lg font-light">
-                    <div>End Of Life : <span className="text-sm font-normal">{selectedVehicle.Vehicle_Info.EOL}</span></div>
+                    <div>
+                      End Of Life :{" "}
+                      {/* <span className="text-sm font-normal">
+                        {selectedVehicle.Vehicle_Info.EOL}
+                      </span> */}
+                    </div>
                     {/* <div className="text-sm font-medium">DD-MM-YYY</div> */}
                   </div>
                   <div className="flex flex-col border-black bg-gray-100 rounded-lg shadow-xl w-full mb-6 p-6 text-lg font-light text-gray-800">
-                    <div>Remaining Useful Life : <span className="text-sm font-normal">{selectedVehicle.Vehicle_Info.RUL}</span></div>
+                    <div>
+                      Remaining Useful Life :{" "}
+                      {/* <span className="text-sm font-normal">
+                        {selectedVehicle.Vehicle_Info.RUL}
+                      </span> */}
+                    </div>
                     {/* <div>1200 cycles</div> */}
                   </div>
                 </div>
