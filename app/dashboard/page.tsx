@@ -158,7 +158,6 @@ const Dashboard = () => {
       }
 
       const data = await response.json();
-      console.log("setVehicles", data.vehicles);
       setVehicles(data.vehicles);
     } catch (error: any) {
       console.error("Error fetching user vehicles:", error.message);
