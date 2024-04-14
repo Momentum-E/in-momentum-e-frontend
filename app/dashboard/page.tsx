@@ -102,7 +102,7 @@ type Vehicle = {
       estimatedCapacityOutput: String;
       speed_Max_Average: String;
       avgDailyKmDriven: Number;
-      estimatedDailyEnergyOutput: String
+      estimatedDailyEnergyOutput: String;
     };
   };
 };
@@ -445,8 +445,16 @@ const Dashboard = () => {
                       Vehicle Info
                     </div>
                     <div className="text-gray-800">
-                      <span className="font-light">Battery Cycle Number :</span>{" "}
-                      {selectedVehicle.Vehicle_Info.Battery.odometer}
+                      {username === "echargeup@demo.com" ? (
+                        <span className="font-light">
+                          Battery Cycle Number :
+                        </span>
+                      ) : (
+                        <span className="font-light">Odometer :</span>
+                      )}{" "}
+                      {username === "echargeup@demo.com"
+                        ? selectedVehicle.Vehicle_Info.Battery?.odometer
+                        : selectedVehicle.Vehicle_Info.Odometer}
                     </div>
                     <div>
                       <span className="font-light">Vehicle Model :</span>{" "}
@@ -462,7 +470,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <span className="font-light">Battery Capacity :</span>{" "}
-                      {selectedVehicle.Vehicle_Info.Battery.batteryCapacity}
+                      {selectedVehicle.Vehicle_Info.Battery?.batteryCapacity}
                     </div>
                   </div>
                   <div className="flex flex-col justify-center items-center border-black bg-gray-100 rounded-lg shadow-xl w-full  mb-6 mt-5 p-6">
@@ -483,9 +491,12 @@ const Dashboard = () => {
                         <div className="">
                           <div className="font-light">Average SOC</div>
                           <div>
-                            {selectedVehicle.Vehicle_Info.Battery.averageSOC
-                              .toFixed(2)
-                              .toString() + "%"}
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery?.averageSOC?
+                                  .toFixed(2)
+                                  .toString() + "%"
+                              : selectedVehicle.Vehicle_Info.Charging_Pattern
+                                  .Average_SOC}
                           </div>
                         </div>
                         <div>
@@ -500,7 +511,15 @@ const Dashboard = () => {
                       </div>
                       <div className="flex justify-center items-center transition-transform hover:scale-110">
                         <ChargeChart
-                          chargePercentage={Number(selectedVehicle.Vehicle_Info.Battery.averageSOC.toFixed(2))}
+                          chargePercentage={
+                            username === "echargeup@demo.com"
+                              ? Number(
+                                  selectedVehicle.Vehicle_Info.Battery?.averageSOC?.toFixed(
+                                    2
+                                  )
+                                )
+                              : selectedVehicle.SOC_START
+                          }
                         />
                       </div>
                       <div className="flex flex-col justify-evenly h-full">
@@ -509,10 +528,11 @@ const Dashboard = () => {
                             Total Charging Sessions
                           </div>
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Battery
-                                .totalChargingSessions
-                            }
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery
+                                  .totalChargingSessions
+                              : selectedVehicle.Vehicle_Info.Charging_Pattern
+                                  .Total_Charging_Sessions}
                           </div>
                         </div>
                         <div>
@@ -520,9 +540,12 @@ const Dashboard = () => {
                             Average Charging Rate
                           </div>
                           <div>
-                            {parseFloat(
-                              selectedVehicle.Vehicle_Info.Battery.chargingRate.toString()
-                            ).toFixed(2) + "A"}
+                            {username === "echargeup@demo.com"
+                              ? parseFloat(
+                                  selectedVehicle.Vehicle_Info.Battery?.chargingRate?.toString()
+                                ).toFixed(2) + "A"
+                              : selectedVehicle.Vehicle_Info.Charging_Pattern
+                                  .Average_Charging_Rate}
                           </div>
                         </div>
                       </div>
@@ -546,17 +569,21 @@ const Dashboard = () => {
                         <div className="mb-4">
                           <div className="font-light">Avg Daily Km Driven</div>
                           <div>
-                            {selectedVehicle.Vehicle_Info.Battery.avgDailyKmDriven.toString() +
-                              " km"}
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery?.avgDailyKmDriven?.toString() +
+                                " km"
+                              : selectedVehicle.Vehicle_Info.Usage
+                                  .Avg_Daily_km_Driven}
                           </div>
                         </div>
                         <div>
                           <div className="font-light">Temperature High/Low</div>
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Battery
-                                .temperature_High_Low
-                            }
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery
+                                  .temperature_High_Low
+                              : selectedVehicle.Vehicle_Info.Usage
+                                  .Temperature_High_Low}
                           </div>
                         </div>
                       </div>
@@ -564,37 +591,63 @@ const Dashboard = () => {
                         <div className="mb-4">
                           <div className="font-light">SOC Range</div>
                           <div>
-                            {selectedVehicle.Vehicle_Info.Battery.SOCRange}
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery?.SOCRange
+                              : selectedVehicle.Vehicle_Info.Usage.SOC_Range}
                           </div>
                         </div>
                         <div>
-                          <div className="font-light">
-                            Estimated Daily Energy Output
-                          </div>
+                          {username === "echargeup@demo.com" ? (
+                            <div className="font-light">
+                              Estimated Daily Energy Output
+                            </div>
+                          ) : (
+                            <div className="font-light">
+                              Range Observed Max/Min
+                            </div>
+                          )}
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Battery.estimatedPowerOutput
-                            }
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery
+                                  .estimatedPowerOutput
+                              : selectedVehicle.Vehicle_Info.Usage
+                                  .Range_Observed_Max_Min}
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-around items-start w-full">
                         <div className="mb-4">
-                          <div className="font-light">Speed Avg/Max</div>
+                          {username === "echargeup@demo.com" ? (
+                            <div className="font-light">Speed Avg/Max</div>
+                          ) : (
+                            <div className="font-light">
+                              Range Range Observed
+                            </div>
+                          )}
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Battery.speed_Max_Average + " km/h"
-                            }
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery
+                                  .speed_Max_Average + " km/h"
+                              : selectedVehicle.Vehicle_Info.Usage
+                                  .Real_Range_Observed}
                           </div>
                         </div>
                         <div>
-                          <div className="font-light">
-                            Estimated Daily Capacity Output
-                          </div>
+                          {username === "echargeup@demo.com" ? (
+                            <div className="font-light">
+                              Estimated Daily Capacity Output
+                            </div>
+                          ) : (
+                            <div className="font-light">
+                              Observed v/s EPA/WLTP Provided
+                            </div>
+                          )}
                           <div>
-                            {
-                              selectedVehicle.Vehicle_Info.Battery.estimatedDailyEnergyOutput
-                            }
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery
+                                  .estimatedDailyEnergyOutput
+                              : selectedVehicle.Vehicle_Info.Usage
+                                  .Observed_vs_EPA_WLTP_provided}
                           </div>
                         </div>
                       </div>
@@ -610,10 +663,7 @@ const Dashboard = () => {
                           State Of Health
                         </span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
-                          {
-                            selectedVehicle.Vehicle_Info.Battery_Health
-                              .State_Of_Health
-                          }
+                          {username === "echargeup@demo.com" ? selectedVehicle.Vehicle_Info.Battery.SoH : selectedVehicle.Vehicle_Info.Battery_Health.SoH}
                         </span>
                       </div>
                     </div>
@@ -628,24 +678,30 @@ const Dashboard = () => {
                     <div className="flex justify-between w-full text-sm">
                       <div className="flex flex-col justify-center items-start">
                         <div className="font-light">SoH</div>
-                        <div>{selectedVehicle.Vehicle_Info.Battery.SoH}</div>
+                        <div>
+                          {username === "echargeup@demo.com"
+                            ? selectedVehicle.Vehicle_Info.Battery?.SoH
+                            : selectedVehicle.Vehicle_Info.Battery_Health.SoH}
+                        </div>
                       </div>
                       <div>
                         <div className="font-light">Estimated Degradation</div>
                         <div>
-                          {
-                            selectedVehicle.Vehicle_Info.Battery
-                              .estimatedDegradation
-                          }
+                          {username === "echargeup@demo.com"
+                            ? selectedVehicle.Vehicle_Info.Battery
+                                .estimatedDegradation
+                            : selectedVehicle.Vehicle_Info.Battery_Health
+                                .Estimated_Degradation}
                         </div>
                       </div>
                       <div>
                         <div className="font-light">Battery Chemistry</div>
                         <div>
-                          {
-                            selectedVehicle.Vehicle_Info.Battery
-                              .batteryChemistry
-                          }
+                          {username === "echargeup@demo.com"
+                            ? selectedVehicle.Vehicle_Info.Battery
+                                .batteryChemistry
+                            : selectedVehicle.Vehicle_Info.Battery_Health
+                                .Battery_Chemistry}
                         </div>
                       </div>
                     </div>
@@ -655,18 +711,26 @@ const Dashboard = () => {
                   <div className="flex  border-black bg-gray-100 text-gray-800 rounded-lg shadow-xl w-full  mr-6 mb-6 p-6 text-lg font-light">
                     <div>
                       End Of Life :{" "}
-                      {/* <span className="text-sm font-normal">
-                        {selectedVehicle.Vehicle_Info.EOL}
-                      </span> */}
+                      {username === "echargeup@demo.com" ? (
+                        ""
+                      ) : (
+                        <span className="text-sm font-normal">
+                          {selectedVehicle.Vehicle_Info.EOL}
+                        </span>
+                      )}
                     </div>
                     {/* <div className="text-sm font-medium">DD-MM-YYY</div> */}
                   </div>
                   <div className="flex flex-col border-black bg-gray-100 rounded-lg shadow-xl w-full mb-6 p-6 text-lg font-light text-gray-800">
                     <div>
                       Remaining Useful Life :{" "}
-                      {/* <span className="text-sm font-normal">
-                        {selectedVehicle.Vehicle_Info.RUL}
-                      </span> */}
+                      {username === "echargeup@demo.com" ? (
+                        ""
+                      ) : (
+                        <span className="text-sm font-normal">
+                          {selectedVehicle.Vehicle_Info.RUL}
+                        </span>
+                      )}
                     </div>
                     {/* <div>1200 cycles</div> */}
                   </div>
