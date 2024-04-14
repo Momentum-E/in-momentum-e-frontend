@@ -491,10 +491,19 @@ const Dashboard = () => {
                         <div className="">
                           <div className="font-light">Average SOC</div>
                           <div>
-                            {username === "echargeup@demo.com"
-                              ? selectedVehicle.Vehicle_Info.Battery?.averageSOC?
+                            {/* {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery?.averageSOC
                                   .toFixed(2)
                                   .toString() + "%"
+                              : selectedVehicle.Vehicle_Info.Charging_Pattern
+                                  .Average_SOC} */}
+                            {username === "echargeup@demo.com"
+                              ? selectedVehicle.Vehicle_Info.Battery
+                                  ?.averageSOC !== undefined
+                                ? selectedVehicle.Vehicle_Info.Battery.averageSOC
+                                    .toFixed(2)
+                                    .toString() + "%"
+                                : ""
                               : selectedVehicle.Vehicle_Info.Charging_Pattern
                                   .Average_SOC}
                           </div>
@@ -663,7 +672,9 @@ const Dashboard = () => {
                           State Of Health
                         </span>
                         <span className="w-full flex items-center justify-center text-blue-500 font-bold">
-                          {username === "echargeup@demo.com" ? selectedVehicle.Vehicle_Info.Battery.SoH : selectedVehicle.Vehicle_Info.Battery_Health.SoH}
+                          {username === "echargeup@demo.com"
+                            ? selectedVehicle.Vehicle_Info.Battery.SoH
+                            : selectedVehicle.Vehicle_Info.Battery_Health.SoH}
                         </span>
                       </div>
                     </div>
