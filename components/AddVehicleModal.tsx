@@ -37,7 +37,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({
     };
 
     // Make the HTTP POST request to your API endpoint
-    await fetch("https://in-momentum-e-backend.onrender.com/user/addVehicle", {
+    await fetch(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user/addVehicle`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

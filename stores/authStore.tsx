@@ -21,7 +21,7 @@ export const useAuthStore = create(
       logout: async () => {
         try {
           const response = await fetch(
-            "https://in-momentum-e-backend.onrender.com/auth/global-sign-out",
+            `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/global-sign-out`,
             {
               method: "POST",
               credentials: "include",
@@ -47,7 +47,7 @@ export const useAuthStore = create(
       refreshToken: async (userId: string) => {
         try {
           const response = await fetch(
-            "https://in-momentum-e-backend.onrender.com/auth/refresh-auth",
+            `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/refresh-auth`,
             {
               method: "POST",
               headers: {

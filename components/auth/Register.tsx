@@ -30,7 +30,7 @@ export default function Register() {
     const { email, password } = formData;
 
     try {
-      const response = await fetch("https://in-momentum-e-backend.onrender.com/auth/sign-up", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/sign-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export default function Register() {
     // console.log(email, confirmationCode, name);
     try {
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/auth/confirm-sign-up",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/confirm-sign-up`,
         {
           method: "POST",
           headers: {

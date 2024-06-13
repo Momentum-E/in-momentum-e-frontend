@@ -58,7 +58,7 @@ const ProfilePage = () => {
   const fetchProfileImage = async () => {
     try {
       const response = await fetch(
-        `https://in-momentum-e-backend.onrender.com/user-data/profile-picture`,
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user-data/profile-picture`,
         {
           method: "POST",
           credentials: "include",
@@ -91,7 +91,7 @@ const ProfilePage = () => {
   const deleteProfileImage = async () => {
     try {
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/user-data/remove-profile-picture",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user-data/remove-profile-picture`,
         {
           method: "DELETE",
           headers: {
@@ -131,7 +131,7 @@ const ProfilePage = () => {
 
     try {
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/user-data/upload/profile-picture",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user-data/upload/profile-picture`,
         {
           method: "POST",
           body: formData,
@@ -187,7 +187,7 @@ const ProfilePage = () => {
     try {
       // Make a POST request to the backend route
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/auth/change-password",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/change-password`,
         {
           method: "POST",
           headers: {
@@ -229,7 +229,7 @@ const ProfilePage = () => {
     e.preventDefault();
     try {
       // Make a POST request to the backend route
-      const response = await fetch("https://in-momentum-e-backend.onrender.com/auth/delete-user", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/delete-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

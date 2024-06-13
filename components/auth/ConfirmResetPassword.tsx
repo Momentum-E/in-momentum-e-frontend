@@ -25,7 +25,7 @@ const ConfirmPasswordReset = () => {
 
     try {
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/auth/confirm-forgot-password",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/confirm-forgot-password`,
         {
           method: "POST",
           headers: {

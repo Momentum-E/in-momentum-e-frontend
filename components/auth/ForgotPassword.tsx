@@ -15,7 +15,7 @@ const ForgotPassword = () => {
 
     try {
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/auth/forgot-password",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/forgot-password`,
         {
           method: "POST",
           headers: {

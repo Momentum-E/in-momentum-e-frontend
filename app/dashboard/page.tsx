@@ -135,7 +135,7 @@ const Dashboard = () => {
     try {
       // console.log("fetchUserVehicles called");
 
-      const response = await fetch("https://in-momentum-e-backend.onrender.com/user/get-vehicles", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user/get-vehicles`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ const Dashboard = () => {
   const fetchProfileImage = async () => {
     try {
       const response = await fetch(
-        `https://in-momentum-e-backend.onrender.com/user-data/profile-picture`,
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user-data/profile-picture`,
         {
           method: "POST",
           credentials: "include",
@@ -247,7 +247,7 @@ const Dashboard = () => {
     } = vehicle;
 
     // Send a request to delete the vehicle
-    await fetch("https://in-momentum-e-backend.onrender.com/user/deleteVehicle", {
+    await fetch(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user/deleteVehicle`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

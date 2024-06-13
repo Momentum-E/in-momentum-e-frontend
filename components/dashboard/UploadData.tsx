@@ -40,7 +40,7 @@ const UploadData = () => {
       setUploadStatus("Uploading...");
 
       const response = await fetch(
-        `https://in-momentum-e-backend.onrender.com/user-data/presignedUploadUrl`,
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user-data/presignedUploadUrl`,
         {
           method: "POST",
           body: JSON.stringify({ fileName: file.name, type: file.type }),

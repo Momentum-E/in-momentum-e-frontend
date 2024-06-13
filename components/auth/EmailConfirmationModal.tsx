@@ -43,7 +43,7 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
   const handleResend = async () => {
     try {
       const response = await fetch(
-        "https://in-momentum-e-backend.onrender.com/auth/resend-confirmation-code",
+        `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/auth/resend-confirmation-code`,
         {
           method: "POST",
           headers: {

@@ -18,7 +18,7 @@ const UpdateUserDetails: React.FC = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch("https://in-momentum-e-backend.onrender.com/user-data/update-user-details", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/user-data/update-user-details`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
